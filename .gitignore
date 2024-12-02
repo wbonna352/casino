@@ -6,3 +6,4 @@
 /.quarto/
 .idea
 _site/
+**/__pycache__/

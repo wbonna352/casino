@@ -1,6 +1,6 @@
 from base import session
 from models import Player, Transaction, GameType
-from games import play_roulette
+from games import play_straight_roulette, play_range_roulette
 
 from decimal import Decimal
 
@@ -42,8 +42,10 @@ def add_withdrawal(player_id: int, value: float) -> None:
 def add_game(player_id: int, game_type: GameType, stake: float) -> None:
     player = get_player(player_id)
     assert player.account_balance >= Decimal(stake), "Too high stake"
-    if game_type == GameType.roulette:
-        game = play_roulette(player_id, stake)
+    if game_type == GameType.straight_roulette:
+        game = play_straight_roulette(player_id, stake)
+    elif game_type == GameType.range_roulette:
+        game = play_range_roulette(player_id, stake)
 
     session.add(game)
     player.account_balance -= game.stake

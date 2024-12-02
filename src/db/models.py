@@ -2,8 +2,19 @@ from sqlalchemy import Column, Integer, String, DateTime, Numeric, ForeignKey, E
 from sqlalchemy.orm import Relationship
 from datetime import datetime
 import enum
+from decimal import Decimal
 
-from base import Base, engine
+from base import Base, engine, session
+
+class GameType(enum.Enum):
+    straight_roulette = "straight_roulette"
+    range_roulette = "range_roulette"
+
+
+class ResultType(enum.Enum):
+    win = "win"
+    draw = "draw"
+    loss = "loss"
 
 
 class Player(Base):
@@ -19,6 +30,27 @@ class Player(Base):
 
     transaction = Relationship("Transaction", back_populates="player")
     game = Relationship("Game", back_populates="player")
+
+    def make_deposit(self, value: float) -> None:
+        transaction = Transaction(
+            player_id=self.id,
+            type=TransactionType.deposit,
+            value=value
+        )
+        session.add(transaction)
+        self.account_balance += Decimal(value)
+        session.commit()
+
+    def make_withdrawal(self, value: float) -> None:
+        transaction = Transaction(
+            player_id=self.id,
+            type=TransactionType.withdrawal,
+            value=value
+        )
+        assert self.account_balance >= Decimal(value), "Too high withdrawal"
+        session.add(transaction)
+        self.account_balance -= Decimal(value)
+        session.commit()
 
 
 class TransactionType(enum.Enum):
@@ -37,16 +69,6 @@ class Transaction(Base):
     updated_at = Column(DateTime, onupdate=func.now())
 
     player = Relationship("Player", back_populates="transaction")
-
-
-class GameType(enum.Enum):
-    roulette = "roulette"
-
-
-class ResultType(enum.Enum):
-    win = "win"
-    draw = "draw"
-    loss = "loss"
 
 
 class Game(Base):
