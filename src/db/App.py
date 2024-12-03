@@ -13,7 +13,5 @@ if __name__ == '__main__':
 
     while player.account_balance >= 1:
         stake = max(player.account_balance * randint(5, 50) / 100, 1)
-        game = play_range_roulette(player.id, stake)
-        session.add(game)
-        session.commit()
+        play_range_roulette(player.id, stake)
         sleep(randint(1, 120))
