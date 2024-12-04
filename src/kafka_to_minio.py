@@ -1,13 +1,13 @@
 from pyspark.sql import SparkSession, DataFrame
 import pyspark.sql.functions as F
 
-minioEndpoint = "http://localhost:9000"
+minioEndpoint = "http://minio:9000"
 minioAccessKey = "minio"
 minioSecretKey = "minio123"
 
 spark = (
     SparkSession.builder
-    .master("local[*]")
+    # .master("local[*]")
     .config("spark.jars.packages",
             "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,"
             "org.apache.hadoop:hadoop-aws:3.3.4,"
@@ -29,7 +29,7 @@ def get_kafka_df(table_name: str) -> DataFrame:
         spark
         .readStream
         .format("kafka")
-        .option("kafka.bootstrap.servers", "localhost:9092")
+        .option("kafka.bootstrap.servers", "casino-kafka:9090")
         .option("subscribe", f"casino.public.{table_name}")
         .option("startingOffsets", "earliest")
         .load()
@@ -41,10 +41,9 @@ def get_kafka_df(table_name: str) -> DataFrame:
 def write_df_to_minio(df: DataFrame, table_name: str) -> None:
     (
         df.writeStream
-        .format("csv")
-        .option("path", f"s3a://casino/{table_name}")
+        .format("iceberg")
         .option("checkpointLocation", f"s3a://casino/checkpoint/{table_name}")
-        .start()
+        .toTable(table_name)
         .awaitTermination()
     )
 
