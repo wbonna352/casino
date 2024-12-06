@@ -1,0 +1,17 @@
+{
+  "name": "casino-postgres-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "casino",
+    "database.password": "casino",
+    "database.dbname": "casino",
+    "plugin.name": "pgoutput",
+    "database.server.name": "casino-db",
+    "slot.name": "debezium_slot",
+    "publication.name": "debezium_publication",
+    "topic.prefix": "casino"
+  }
+}
