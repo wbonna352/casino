@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "casino",
     "section": "",
-    "text": "Schemat projektu Casino\n\n\n\n\n\ngraph TD\n  player1[Player 1] --&gt;|Wrzuć dane| postgres[Postgres]\n  player2[Player 2] --&gt;|Wrzuć dane| postgres\n  player3[Player 3] --&gt;|Wrzuć dane| postgres\n  postgres --&gt;|Nasluchiwanie zmian| debezium[Debezium]\n  debezium --&gt;|Zapis| kafka[Kafka]\n  kafka --&gt;|Czytanie wiadomości| spark_master[Spark Master]\n  spark_master --&gt;|Przetwarzanie| spark_worker[Spark Worker]\n  spark_worker --&gt;|Zapis| minio[Minio]\n  zookeeper[Zookeeper] --&gt;|Zarządzanie| kafka"
+    "text": "Schemat projektu Casino\n\n\n\n\n\ngraph TD\n  player1[Player 1] --&gt;|Wygeneruj dane| postgres[Postgres]\n  player2[Player 2] --&gt;|Wygeneruj dane| postgres\n  player3[Player 3] --&gt;|Wygeneruj dane| postgres\n  postgres --&gt;|Nasluchiwanie zmian| debezium[Debezium]\n  debezium --&gt;|Zapis| kafka[Kafka]\n  kafka --&gt;|Czytanie wiadomości| spark_master[Spark Master]\n  spark_master --&gt;|Przetwarzanie| spark_worker[Spark Worker]\n  spark_worker --&gt;|Zapis| minio[Minio]\n  zookeeper[Zookeeper] --&gt;|Zarządzanie| kafka"
   },
   {
     "objectID": "src/db/usun.html",

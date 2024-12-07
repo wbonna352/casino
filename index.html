@@ -156,9 +156,9 @@ ul.task-list li input[type="checkbox"] {
 <p></p><figure class="figure"><p></p>
 <div>
 <pre class="mermaid mermaid-js">graph TD
-  player1[Player 1] --&gt;|Wrzuć dane| postgres[Postgres]
-  player2[Player 2] --&gt;|Wrzuć dane| postgres
-  player3[Player 3] --&gt;|Wrzuć dane| postgres
+  player1[Player 1] --&gt;|Wygeneruj dane| postgres[Postgres]
+  player2[Player 2] --&gt;|Wygeneruj dane| postgres
+  player3[Player 3] --&gt;|Wygeneruj dane| postgres
   postgres --&gt;|Nasluchiwanie zmian| debezium[Debezium]
   debezium --&gt;|Zapis| kafka[Kafka]
   kafka --&gt;|Czytanie wiadomości| spark_master[Spark Master]
