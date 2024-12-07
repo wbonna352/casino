@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://wbonna352.github.io/casino/about.html</loc>
-    <lastmod>2024-11-27T15:01:54.319Z</lastmod>
+    <loc>https://wbonna352.github.io/casino/index.html</loc>
+    <lastmod>2024-12-07T15:11:02.484Z</lastmod>
   </url>
   <url>
-    <loc>https://wbonna352.github.io/casino/index.html</loc>
-    <lastmod>2024-11-27T15:05:43.544Z</lastmod>
+    <loc>https://wbonna352.github.io/casino/src/db/usun.html</loc>
+    <lastmod>2024-12-07T14:37:53.252Z</lastmod>
+  </url>
+  <url>
+    <loc>https://wbonna352.github.io/casino/about.html</loc>
+    <lastmod>2024-12-04T07:57:05.259Z</lastmod>
+  </url>
+  <url>
+    <loc>https://wbonna352.github.io/casino/usun.html</loc>
+    <lastmod>2024-12-06T21:57:24.141Z</lastmod>
   </url>
 </urlset>
