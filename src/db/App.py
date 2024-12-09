@@ -1,15 +1,28 @@
 import os
 from time import sleep
 from random import randint
+from transactions import is_player_exists, get_player_by_email
 from base import session
-from models import Player
-from games import play_range_roulette, play_straight_roulette
+from models import Player, create_tables
+from games import play_range_roulette
 
 
-email: str = os.getenv("USER_EMAIL")
-player: Player = Player.query.filter(Player.email == email).first()
+email: str = os.getenv("PLAYER_EMAIL")
 
 if __name__ == '__main__':
+
+    if not is_player_exists(email):
+        session.add(Player(
+            first_name=os.getenv("PLAYER_FIRST_NAME"),
+            last_name=os.getenv("PLAYER_LAST_NAME"),
+            email=email
+        ))
+        session.commit()
+
+    player: Player = get_player_by_email(email)
+
+    if player.account_balance <= 1:
+        player.make_deposit(1000)
 
     while player.account_balance >= 1:
         stake = max(player.account_balance * randint(5, 50) / 100, 1)

@@ -3,7 +3,10 @@
 .RData
 .Ruserdata
 
+minio
 /.quarto/
 .idea
 _site/
 **/__pycache__/
+wait-for-it.sh
+*usun*
