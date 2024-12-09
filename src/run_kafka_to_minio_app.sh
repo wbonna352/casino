@@ -1,7 +1,7 @@
 #!/bin/bash
 
 spark-submit \
-  --master spark://casino-spark-master:7077 \
+  --deploy-mode client \
   --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,\
 org.apache.hadoop:hadoop-aws:3.3.4,\
 org.apache.hadoop:hadoop-client-api:3.3.4,\

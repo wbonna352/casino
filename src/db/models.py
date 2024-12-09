@@ -6,6 +6,7 @@ from decimal import Decimal
 
 from base import Base, engine, session
 
+
 class GameType(enum.Enum):
     straight_roulette = "straight_roulette"
     range_roulette = "range_roulette"
@@ -86,6 +87,9 @@ class Game(Base):
     player = Relationship("Player", back_populates="game")
 
 
-if __name__ == '__main__':
-    Base.metadata.drop_all(engine)
+def create_tables() -> None:
     Base.metadata.create_all(engine)
+
+
+if __name__ == '__main__':
+    create_tables()
