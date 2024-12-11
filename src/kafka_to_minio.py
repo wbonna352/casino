@@ -1,6 +1,8 @@
 from pyspark.sql import SparkSession, DataFrame
 import pyspark.sql.functions as F
 
+import os
+
 minioEndpoint = "http://minio:9000"
 minioAccessKey = "minio"
 minioSecretKey = "minio123"
@@ -48,6 +50,11 @@ def write_df_to_minio(df: DataFrame, table_name: str) -> None:
     )
 
 
+def streaming_process(table_name: str) -> None:
+    df = get_kafka_df(table_name)
+    write_df_to_minio(df, table_name)
+
+
 if __name__ == '__main__':
-    df = get_kafka_df("players")
-    write_df_to_minio(df, "players")
+    table_name = os.getenv("TABLE_NAME")
+    streaming_process(table_name)
