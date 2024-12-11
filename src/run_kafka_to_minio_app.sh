@@ -1,7 +1,7 @@
 #!/bin/bash
 
 spark-submit \
-  --deploy-mode client \
+  --master spark://casino-spark-master:7077 \
   --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,\
 org.apache.hadoop:hadoop-aws:3.3.4,\
 org.apache.hadoop:hadoop-client-api:3.3.4,\
@@ -19,4 +19,4 @@ org.apache.iceberg:iceberg-spark-runtime-3.5_2.13:1.4.0\
   --conf "spark.hadoop.fs.s3a.path.style.access=true" \
   --conf "spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem" \
   --conf "spark.hadoop.fs.s3a.aws.credentials.provider=org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider" \
- kafka_to_minio.py
+  kafka_to_minio.py

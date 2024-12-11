@@ -5,11 +5,13 @@ from transactions import is_player_exists, get_player_by_email
 from base import session
 from models import Player, create_tables
 from games import play_range_roulette
-
+import models
 
 email: str = os.getenv("PLAYER_EMAIL")
 
 if __name__ == '__main__':
+
+    create_tables()
 
     if not is_player_exists(email):
         session.add(Player(
