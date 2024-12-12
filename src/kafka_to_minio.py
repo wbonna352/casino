@@ -1,7 +1,12 @@
 from pyspark.sql import SparkSession, DataFrame
 import pyspark.sql.functions as F
+from pyspark.sql.types import StringType
+from py4j.protocol import Py4JJavaError
 
 import os
+from time import sleep
+
+from casino_spark.schemas import db_schemas, get_value_schema
 
 minioEndpoint = "http://minio:9000"
 minioAccessKey = "minio"
@@ -35,9 +40,12 @@ def get_kafka_df(table_name: str) -> DataFrame:
         .option("subscribe", f"casino.public.{table_name}")
         .option("startingOffsets", "earliest")
         .load()
-        .withColumn("key", F.col("key").cast("STRING"))
-        .withColumn("value", F.col("value").cast("STRING"))
-)
+        .withColumn("key", F.col("key").cast(StringType()))
+        .withColumn("value", F.from_json(
+            F.col("value").cast(StringType()),
+            get_value_schema(db_schemas.get(table_name))
+        ))
+    )
 
 
 def write_df_to_minio(df: DataFrame, table_name: str) -> None:
@@ -57,4 +65,11 @@ def streaming_process(table_name: str) -> None:
 
 if __name__ == '__main__':
     table_name = os.getenv("TABLE_NAME")
-    streaming_process(table_name)
+
+    while True:
+        try:
+            streaming_process(table_name)
+            break
+        except:
+            print("ERROR")
+            sleep(5)

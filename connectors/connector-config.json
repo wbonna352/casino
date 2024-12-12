@@ -12,6 +12,8 @@
     "database.server.name": "casino-db",
     "slot.name": "debezium_slot",
     "publication.name": "debezium_publication",
-    "topic.prefix": "casino"
+    "topic.prefix": "casino",
+    "decimal.handling.mode": "double",
+    "include.unchanged.columns": "true"
   }
 }

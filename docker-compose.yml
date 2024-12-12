@@ -25,6 +25,7 @@ services:
     image: wurstmeister/zookeeper
     ports:
     - "2181:2181"
+
   kafka:
     container_name: casino-kafka
     image: wurstmeister/kafka
@@ -42,6 +43,8 @@ services:
         "INTERNAL:PLAINTEXT,\
          EXTERNAL:PLAINTEXT"
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+    volumes:
+      - ./kafka-data:/kafka/data
     depends_on:
       - zookeeper
 
@@ -64,6 +67,7 @@ services:
       PLUGIN_PATH: /kafka/connect
     volumes:
       - ./connectors:/tmp/connectors
+      - ./debezium_data:/var/lib/debezium
     depends_on:
       - kafka
       - postgres
@@ -78,6 +82,18 @@ services:
     depends_on:
       - debezium
 
+  init-db:
+    image: python:3.10-slim
+    container_name: casino-init-db
+    volumes:
+      - ./src:/app
+    working_dir: /app
+    environment:
+      POSTGRES_HOST: "casino-db"
+    command: bash -c "pip install sqlalchemy psycopg2-binary && python  init-db.py"
+    depends_on:
+      curl:
+        condition: service_completed_successfully
 
   minio:
     image: minio/minio:latest
@@ -109,8 +125,8 @@ services:
       - ./src:/app
       - spark-data:/opt/spark/work-dir
     depends_on:
-      - minio
-      - debezium
+      curl:
+        condition: service_completed_successfully
 
   spark-worker:
     image: bitnami/spark:3.5.0
@@ -137,6 +153,7 @@ services:
     depends_on:
       - minio
       - spark-master
+      - init-db
     command: bash run_kafka_to_minio_app.sh
 
   spark-transactions:
@@ -151,6 +168,7 @@ services:
     depends_on:
       - minio
       - spark-master
+      - init-db
     command: bash run_kafka_to_minio_app.sh
 
   spark-games:
@@ -165,6 +183,7 @@ services:
     depends_on:
       - minio
       - spark-master
+      - init-db
     command: bash run_kafka_to_minio_app.sh
 
 
@@ -176,12 +195,46 @@ services:
       - ./src:/app
     working_dir: /app
     environment:
-      PLAYER_EMAIL: "example@example.com"
-      PLAYER_FIRST_NAME: "example"
-      PLAYER_LAST_NAME: "example"
+      PLAYER_EMAIL: "ethan.clark@example.com"
+      PLAYER_FIRST_NAME: "Ethan"
+      PLAYER_LAST_NAME: "Clark"
       POSTGRES_HOST: "casino-db"
-    command: bash -c "pip install sqlalchemy psycopg2-binary && python db/App.py"
+    command: bash -c "pip install sqlalchemy psycopg2-binary && python App.py"
+    depends_on:
+      init-db:
+        condition: service_completed_successfully
 
+  user2:
+    image: python:3.10-slim
+    container_name: casino-user2
+    volumes:
+      - ./src:/app
+    working_dir: /app
+    environment:
+      PLAYER_EMAIL: "olivia.bennett@example.com"
+      PLAYER_FIRST_NAME: "Olivia"
+      PLAYER_LAST_NAME: "Bennett"
+      POSTGRES_HOST: "casino-db"
+    command: bash -c "pip install sqlalchemy psycopg2-binary && python App.py"
+    depends_on:
+      init-db:
+        condition: service_completed_successfully
+
+  user3:
+    image: python:3.10-slim
+    container_name: casino-user3
+    volumes:
+      - ./src:/app
+    working_dir: /app
+    environment:
+      PLAYER_EMAIL: "lucas.hayes@example.com"
+      PLAYER_FIRST_NAME: "Lucas"
+      PLAYER_LAST_NAME: "Hayes"
+      POSTGRES_HOST: "casino-db"
+    command: bash -c "pip install sqlalchemy psycopg2-binary && python App.py"
+    depends_on:
+      init-db:
+        condition: service_completed_successfully
 
 volumes:
   casino-db:
