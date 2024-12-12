@@ -19,4 +19,5 @@ org.apache.iceberg:iceberg-spark-runtime-3.5_2.13:1.4.0\
   --conf "spark.hadoop.fs.s3a.path.style.access=true" \
   --conf "spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem" \
   --conf "spark.hadoop.fs.s3a.aws.credentials.provider=org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider" \
+  --conf "spark.cores.max=1" \
   kafka_to_minio.py

@@ -2,20 +2,34 @@ from sqlalchemy import Column, Integer, String, DateTime, Numeric, ForeignKey, E
 from sqlalchemy.orm import Relationship
 from datetime import datetime
 import enum
+from random import randint
 from decimal import Decimal
 
-from base import Base, engine, session
-
-
-class GameType(enum.Enum):
-    straight_roulette = "straight_roulette"
-    range_roulette = "range_roulette"
+from db.base import Base, engine, session
 
 
 class ResultType(enum.Enum):
     win = "win"
     draw = "draw"
     loss = "loss"
+
+
+class GameType(enum.Enum):
+    straight_roulette = "straight_roulette"
+    range_roulette = "range_roulette"
+
+    def play(self, stake) -> (ResultType, float):
+        match self:
+            case GameType.straight_roulette:
+                number = randint(0, 36)
+                result = ResultType.win if number == 0 else ResultType.loss
+                payout = Decimal(36 * stake) if result == ResultType.win else 0
+                return result, payout
+            case GameType.range_roulette:
+                number = randint(0, 36)
+                result = ResultType.win if number > 18 else ResultType.loss
+                payout = Decimal(2 * stake) if result == ResultType.win else 0
+                return result, payout
 
 
 class Player(Base):
@@ -51,6 +65,21 @@ class Player(Base):
         assert self.account_balance >= Decimal(value), "Too high withdrawal"
         session.add(transaction)
         self.account_balance -= Decimal(value)
+        session.commit()
+
+    def play_game(self, game_type: GameType, stake: float) -> None:
+        result, payout = game_type.play(stake)
+        game = Game(
+            player_id=self.id,
+            type=game_type,
+            stake=stake,
+            result=result,
+            payout=payout
+        )
+
+        session.add(game)
+        self.account_balance -= game.stake
+        self.account_balance += game.payout
         session.commit()
 
 
