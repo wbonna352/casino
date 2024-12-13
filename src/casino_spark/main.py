@@ -20,12 +20,13 @@ def default_spark() -> SparkSession:
         .config("spark.hadoop.fs.s3a.path.style.access", "true") \
         .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
         .config("spark.hadoop.fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider") \
+        .config("spark.sql.extensions", "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions") \
         .config("spark.jars.packages",
                 "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,"
                 "org.apache.hadoop:hadoop-aws:3.3.4,"
                 "org.apache.hadoop:hadoop-client-api:3.3.4,"
                 "org.apache.hadoop:hadoop-client-runtime:3.3.4,"
                 "com.amazonaws:aws-java-sdk-bundle:1.12.262,"
-                "org.apache.iceberg:iceberg-spark-runtime-3.5_2.13:1.4.0") \
+                "org.apache.iceberg:iceberg-spark-runtime-3.5_2.12:1.4.0") \
         .getOrCreate()
 

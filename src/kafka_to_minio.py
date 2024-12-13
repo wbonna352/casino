@@ -40,11 +40,13 @@ def get_kafka_df(table_name: str) -> DataFrame:
         .option("subscribe", f"casino.public.{table_name}")
         .option("startingOffsets", "earliest")
         .load()
-        .withColumn("key", F.col("key").cast(StringType()))
+
+        .drop("key")
         .withColumn("value", F.from_json(
             F.col("value").cast(StringType()),
             get_value_schema(db_schemas.get(table_name))
         ))
+        .withColumn("value", F.col("value.payload.after"))
     )
 
 

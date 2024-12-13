@@ -10,3 +10,7 @@ _site/
 **/__pycache__/
 wait-for-it.sh
 *usun*
+kafka-data
+derby.log
+.vscode
+.env

@@ -107,7 +107,7 @@ services:
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minio123
-    command: -c 'mkdir -p /minio/casino &&/usr/bin/minio server /minio/ --console-address ":9010"'
+    command: -c 'mkdir -p /minio/casino && /usr/bin/minio server /minio/ --console-address ":9010"'
 
   spark-master:
     image: bitnami/spark:3.5.0
