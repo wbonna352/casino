@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Wojciech Bonna">
+<meta name="dcterms.date" content="2024-12-13">
 
-<title>casino</title>
+<title>Casino – casino</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -100,6 +102,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="styles.css">
@@ -146,7 +151,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#add-some-new-content" id="toc-add-some-new-content" class="nav-link active" data-scroll-target="#add-some-new-content">add some new content</a></li>
+  <li><a href="#opis" id="toc-opis" class="nav-link active" data-scroll-target="#opis">Opis</a></li>
+  <li><a href="#architektura" id="toc-architektura" class="nav-link" data-scroll-target="#architektura">Architektura</a></li>
+  <li><a href="#implementacja" id="toc-implementacja" class="nav-link" data-scroll-target="#implementacja">Implementacja</a>
+  <ul class="collapse">
+  <li><a href="#docker-compose" id="toc-docker-compose" class="nav-link" data-scroll-target="#docker-compose">Docker Compose</a>
+  <ul class="collapse">
+  <li><a href="#kontenery" id="toc-kontenery" class="nav-link" data-scroll-target="#kontenery">Kontenery</a></li>
+  </ul></li>
+  <li><a href="#flow-danych" id="toc-flow-danych" class="nav-link" data-scroll-target="#flow-danych">Flow danych</a></li>
+  <li><a href="#baza-produkcyjna" id="toc-baza-produkcyjna" class="nav-link" data-scroll-target="#baza-produkcyjna">Baza produkcyjna</a></li>
+  <li><a href="#rodzaje-gier" id="toc-rodzaje-gier" class="nav-link" data-scroll-target="#rodzaje-gier">Rodzaje gier</a>
+  <ul class="collapse">
+  <li><a href="#straight-roulette-ruletka-prosta" id="toc-straight-roulette-ruletka-prosta" class="nav-link" data-scroll-target="#straight-roulette-ruletka-prosta">Straight Roulette (Ruletka Prosta)</a></li>
+  <li><a href="#range-roulette-ruletka-zakresowa" id="toc-range-roulette-ruletka-zakresowa" class="nav-link" data-scroll-target="#range-roulette-ruletka-zakresowa">Range Roulette (Ruletka Zakresowa)</a></li>
+  <li><a href="#w-obu-przypadkach" id="toc-w-obu-przypadkach" class="nav-link" data-scroll-target="#w-obu-przypadkach">W obu przypadkach:</a></li>
+  </ul></li>
+  <li><a href="#strategie-graczy" id="toc-strategie-graczy" class="nav-link" data-scroll-target="#strategie-graczy">Strategie Graczy</a>
+  <ul class="collapse">
+  <li><a href="#ethan-clark" id="toc-ethan-clark" class="nav-link" data-scroll-target="#ethan-clark">Ethan Clark</a></li>
+  <li><a href="#olivia-bennett" id="toc-olivia-bennett" class="nav-link" data-scroll-target="#olivia-bennett">Olivia Bennett</a></li>
+  <li><a href="#lucas-hayes" id="toc-lucas-hayes" class="nav-link" data-scroll-target="#lucas-hayes">Lucas Hayes</a></li>
+  </ul></li>
+  <li><a href="#struktura-bucketa-minio" id="toc-struktura-bucketa-minio" class="nav-link" data-scroll-target="#struktura-bucketa-minio">Struktura Bucketa MinIO</a></li>
+  </ul></li>
+  <li><a href="#wyniki" id="toc-wyniki" class="nav-link" data-scroll-target="#wyniki">Wyniki</a></li>
+  <li><a href="#jak-uruchomić" id="toc-jak-uruchomić" class="nav-link" data-scroll-target="#jak-uruchomić">Jak uruchomić</a></li>
+  <li><a href="#podsumowanie" id="toc-podsumowanie" class="nav-link" data-scroll-target="#podsumowanie">Podsumowanie</a></li>
   </ul>
 </nav>
     </div>
@@ -155,14 +186,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">casino</h1>
+<h1 class="title">Casino</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Wojciech Bonna </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 13, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -172,16 +215,413 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This is a Quarto website.</p>
-<p>To learn more about Quarto websites visit <a href="https://quarto.org/docs/websites" class="uri">https://quarto.org/docs/websites</a>.</p>
+<section id="opis" class="level1">
+<h1>Opis</h1>
+<p><strong>Projekt symulacji kasyna</strong> to projekt portfolio big data, którego celem jest symulacja środowiska kasyna. Prezentuje umiejętności w zakresie systemów rozproszonych, strumieniowania danych i formatów data lake. Projekt wykorzystuje <strong>Docker Compose</strong>, <strong>Apache Kafka</strong>, <strong>PostgreSQL</strong>, <strong>Debezium</strong>, <strong>Spark Structured Streaming</strong> oraz <strong>MinIO z Apache Iceberg</strong>.</p>
+</section>
+<section id="architektura" class="level1">
+<h1>Architektura</h1>
+<p>Architektura projektu składa się z następujących komponentów:</p>
+<ul>
+<li><strong>Gracze Kasyna</strong>: Każdy z 3 graczy znajduje się w osobnym kontenerze Docker i gra w dwa rodzaje ruletki.</li>
+<li><strong>PostgreSQL</strong>: Działa jako początkowe miejsce przechowywania danych z gier.</li>
+<li><strong>Debezium Connector</strong>: Przechwytuje zmiany z PostgreSQL i strumieniuje je do Kafki.</li>
+<li><strong>Apache Kafka</strong>: Służy jako centralny kanał przetwarzania danych.</li>
+<li><strong>Spark Structured Streaming</strong>: Odczytuje dane z Kafki i zapisuje je na MinIO w formacie Iceberg.</li>
+<li><strong>MinIO</strong>: Obiektowy magazyn danych w chmurze, wykorzystywany tutaj jako data lake.</li>
+</ul>
+</section>
+<section id="implementacja" class="level1">
+<h1>Implementacja</h1>
+<section id="docker-compose" class="level2">
+<h2 class="anchored" data-anchor-id="docker-compose">Docker Compose</h2>
+<p>Projekt jest konteneryzowany za pomocą <strong>Docker Compose</strong> dla łatwego uruchamiania i orkiestracji.</p>
+<section id="kontenery" class="level3">
+<h3 class="anchored" data-anchor-id="kontenery">Kontenery</h3>
+<ul>
+<li><strong>casino-postgres</strong>: Kontener z bazą danych PostgreSQL, która jest bazą produkcyjną kasyna.</li>
+<li><strong>casino-zookeeper</strong>: Kontener Apache ZooKeeper, używany do zarządzania koordynacją Kafki.</li>
+<li><strong>casino-kafka</strong>: Kontener Apache Kafka, obsługujący przesyłanie strumieniowych danych między usługami.</li>
+<li><strong>casino-debezium</strong>: Kontener Debezium, służący do rejestrowania zmian w bazie danych PostgreSQL i przesyłania ich do Kafki.</li>
+<li><strong>casino-curl</strong>: Kontener z curl, używany do inicjowania połączenia Debezium z PostgreSQL.</li>
+<li><strong>casino-init-db</strong>: Kontener uruchamiający skrypt w Pythonie, który inicjalizuje bazę danych PostgreSQL.</li>
+<li><strong>casino-minio</strong>: Kontener MinIO, przechowujący dane w formacie Iceberg (obiektowe przechowywanie danych).</li>
+<li><strong>casino-spark-master</strong>: Kontener Spark Master, zarządzający zadaniami obliczeniowymi w klastrze Spark.</li>
+<li><strong>casino-spark-worker</strong>: Kontener Spark Worker, wykonujący zadania obliczeniowe rozdzielane przez Spark Master.</li>
+<li><strong>casino-spark-players</strong>: Kontener Spark do przetwarzania strumieniowych danych związanych z graczami.</li>
+<li><strong>casino-spark-transactions</strong>: Kontener Spark do przetwarzania strumieniowych danych związanych z transakcjami.</li>
+<li><strong>casino-spark-games</strong>: Kontener Spark do przetwarzania strumieniowych danych związanych z grami.</li>
+<li><strong>casino-user1</strong>: Kontener Python dla Gracza 1, symulujący interakcję z grą kasynową.</li>
+<li><strong>casino-user2</strong>: Kontener Python dla Gracza 2, symulujący interakcję z grą kasynową.</li>
+<li><strong>casino-user3</strong>: Kontener Python dla Gracza 3, symulujący interakcję z grą kasynową.</li>
+</ul>
+</section>
+</section>
+<section id="flow-danych" class="level2">
+<h2 class="anchored" data-anchor-id="flow-danych">Flow danych</h2>
+<p>Dane są generowane przez trzech graczy, którzy wysyłają informacje do bazy danych PostgreSQL. Zmiany w bazie danych są rejestrowane przez Debezium, który następnie przesyła je do systemu Kafka. Z Kafka, dane są odczytywane przez Spark i przetwarzane, a na końcu zapisywane do MinIO w formacie Iceberg.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">graph TD
+    A[Player 1] --&gt; D[Postgres]
+    B[Player 2] --&gt; D
+    C[Player 3] --&gt; D
+    D --&gt; |Debezium| E[Kafka]
+    E --&gt; |Spark| F[Minio]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="baza-produkcyjna" class="level2">
+<h2 class="anchored" data-anchor-id="baza-produkcyjna">Baza produkcyjna</h2>
+<p>Baza produkcyjna kasyna jest oparta na PostgreSQL i jest tworzona oraz zarządzana za pomocą <strong>SQLAlchemy</strong>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">players</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">games</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">transactions</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">FROM</span> players</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>3 records</caption>
+<colgroup>
+<col style="width: 2%">
+<col style="width: 10%">
+<col style="width: 9%">
+<col style="width: 25%">
+<col style="width: 14%">
+<col style="width: 18%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">id</th>
+<th style="text-align: left;">first_name</th>
+<th style="text-align: left;">last_name</th>
+<th style="text-align: left;">email</th>
+<th style="text-align: right;">account_balance</th>
+<th style="text-align: left;">created_at</th>
+<th style="text-align: left;">updated_at</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Olivia</td>
+<td style="text-align: left;">Bennett</td>
+<td style="text-align: left;">olivia.bennett@example.com</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: left;">2024-12-12 19:45:51</td>
+<td style="text-align: left;">2024-12-13 11:20:09</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Ethan</td>
+<td style="text-align: left;">Clark</td>
+<td style="text-align: left;">ethan.clark@example.com</td>
+<td style="text-align: right;">631.62</td>
+<td style="text-align: left;">2024-12-12 19:45:50</td>
+<td style="text-align: left;">2024-12-13 11:22:32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Lucas</td>
+<td style="text-align: left;">Hayes</td>
+<td style="text-align: left;">lucas.hayes@example.com</td>
+<td style="text-align: right;">680.41</td>
+<td style="text-align: left;">2024-12-12 19:45:51</td>
+<td style="text-align: left;">2024-12-13 11:23:24</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<section id="add-some-new-content" class="level1">
-<h1>add some new content</h1>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">FROM</span> games</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="kw">LIMIT</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>5 records</caption>
+<colgroup>
+<col style="width: 3%">
+<col style="width: 12%">
+<col style="width: 21%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 24%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">id</th>
+<th style="text-align: right;">player_id</th>
+<th style="text-align: left;">type</th>
+<th style="text-align: right;">stake</th>
+<th style="text-align: left;">result</th>
+<th style="text-align: right;">payout</th>
+<th style="text-align: left;">created_at</th>
+<th style="text-align: left;">updated_at</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">range_roulette</td>
+<td style="text-align: right;">130.0</td>
+<td style="text-align: left;">win</td>
+<td style="text-align: right;">260.0</td>
+<td style="text-align: left;">2024-12-12 19:46:32</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">range_roulette</td>
+<td style="text-align: right;">220.0</td>
+<td style="text-align: left;">win</td>
+<td style="text-align: right;">440.0</td>
+<td style="text-align: left;">2024-12-12 19:46:38</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">range_roulette</td>
+<td style="text-align: right;">597.8</td>
+<td style="text-align: left;">win</td>
+<td style="text-align: right;">1195.6</td>
+<td style="text-align: left;">2024-12-12 19:47:07</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">range_roulette</td>
+<td style="text-align: right;">214.7</td>
+<td style="text-align: left;">loss</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: left;">2024-12-12 19:47:03</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">straight_roulette</td>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: left;">loss</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: left;">2024-12-12 19:47:39</td>
+<td style="text-align: left;">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource sql number-lines code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="kw">FROM</span> transactions</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">LIMIT</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>5 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">id</th>
+<th style="text-align: right;">player_id</th>
+<th style="text-align: left;">type</th>
+<th style="text-align: right;">value</th>
+<th style="text-align: left;">created_at</th>
+<th style="text-align: left;">updated_at</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">deposit</td>
+<td style="text-align: right;">1000</td>
+<td style="text-align: left;">2024-12-12 19:45:50</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">deposit</td>
+<td style="text-align: right;">1000</td>
+<td style="text-align: left;">2024-12-12 19:45:51</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">deposit</td>
+<td style="text-align: right;">1000</td>
+<td style="text-align: left;">2024-12-12 19:45:51</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">deposit</td>
+<td style="text-align: right;">1000</td>
+<td style="text-align: left;">2024-12-12 20:33:19</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">deposit</td>
+<td style="text-align: right;">1000</td>
+<td style="text-align: left;">2024-12-12 20:33:14</td>
+<td style="text-align: left;">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="rodzaje-gier" class="level2">
+<h2 class="anchored" data-anchor-id="rodzaje-gier">Rodzaje gier</h2>
+<section id="straight-roulette-ruletka-prosta" class="level3">
+<h3 class="anchored" data-anchor-id="straight-roulette-ruletka-prosta">Straight Roulette (Ruletka Prosta)</h3>
+<ul>
+<li><strong>Zasady</strong>: Gracz stawia zakład na konkretny numer na kole ruletki (numery od 0 do 36).</li>
+<li><strong>Mechanizm</strong>: Po zakręceniu kołem, losowany jest numer.
+<ul>
+<li><strong>Wygrana</strong>: Gracz wygrywa, jeśli wylosowany numer to 0 (zero).</li>
+<li><strong>Przegrana</strong>: W przeciwnym przypadku gracz przegrywa.</li>
+</ul></li>
+<li><strong>Wypłata</strong>: Jeśli gracz wygra (numer = 0), wypłata wynosi <strong>36 razy stawka</strong>. W przypadku przegranej wypłata wynosi 0.</li>
+</ul>
+</section>
+<section id="range-roulette-ruletka-zakresowa" class="level3">
+<h3 class="anchored" data-anchor-id="range-roulette-ruletka-zakresowa">Range Roulette (Ruletka Zakresowa)</h3>
+<ul>
+<li><strong>Zasady</strong>: Gracz stawia zakład na to, czy wylosowany numer na kole ruletki będzie większy niż 18.</li>
+<li><strong>Mechanizm</strong>: Po zakręceniu kołem, losowany jest numer.
+<ul>
+<li><strong>Wygrana</strong>: Gracz wygrywa, jeśli wylosowany numer jest większy niż 18 (czyli w zakresie od 19 do 36).</li>
+<li><strong>Przegrana</strong>: Gracz przegrywa, jeśli numer jest w zakresie od 0 do 18.</li>
+</ul></li>
+<li><strong>Wypłata</strong>: Jeśli gracz wygra (numer &gt; 18), wypłata wynosi <strong>2 razy stawka</strong>. W przypadku przegranej wypłata wynosi 0.</li>
+</ul>
+</section>
+<section id="w-obu-przypadkach" class="level3">
+<h3 class="anchored" data-anchor-id="w-obu-przypadkach">W obu przypadkach:</h3>
+<ul>
+<li><strong>Wynik</strong>: Określany jest przez losowanie numeru i porównanie go z odpowiednią wartością lub zakresem.</li>
+<li><strong>Payout (wypłata)</strong>: Kwota, którą gracz otrzymuje, jeśli wygra, lub 0, jeśli przegra.</li>
+</ul>
+</section>
+</section>
+<section id="strategie-graczy" class="level2">
+<h2 class="anchored" data-anchor-id="strategie-graczy">Strategie Graczy</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Dane graczy użyte w tym projekcie są fikcyjne i zostały stworzone wyłącznie w celach demonstracyjnych.</p>
+</div>
+</div>
+<section id="ethan-clark" class="level3">
+<h3 class="anchored" data-anchor-id="ethan-clark">Ethan Clark</h3>
+<ul>
+<li>Ethan gra w <strong>Ruletkę Zakresową (Range Roulette)</strong>.</li>
+<li>Czas oczekiwania przed każdym zakładem wynosi losowo od 1 do 60 sekund.</li>
+<li>Stawka jest obliczana na podstawie salda konta gracza, gdzie stawka to losowa wartość w przedziale od 5% do 50% salda konta, z gwarancją, że stawka nie będzie mniejsza niż 1.</li>
+</ul>
+</section>
+<section id="olivia-bennett" class="level3">
+<h3 class="anchored" data-anchor-id="olivia-bennett">Olivia Bennett</h3>
+<ul>
+<li>Olivia gra w <strong>Prostą Ruletkę (Straight Roulette)</strong>.</li>
+<li>Czas oczekiwania przed zakładem wynosi losowo od 1 do 15 sekund.</li>
+<li>Stawka jest obliczana na podstawie salda konta gracza, gdzie stawka to losowa wartość w przedziale od 1% do 10% salda konta, z gwarancją, że stawka nie będzie mniejsza niż 1.</li>
+</ul>
+</section>
+<section id="lucas-hayes" class="level3">
+<h3 class="anchored" data-anchor-id="lucas-hayes">Lucas Hayes</h3>
+<ul>
+<li>Lucas gra w jedną z dwóch gier: <strong>Prostą Ruletkę (Straight Roulette)</strong> lub <strong>Ruletkę Zakresową (Range Roulette)</strong>.</li>
+<li>Czas oczekiwania przed zakładem wynosi losowo od 10 do 60 sekund.</li>
+<li>Wybór gry jest losowy. Dla każdej z gier:
+<ul>
+<li>Jeśli gra w <strong>Prostą Ruletkę (Straight Roulette)</strong>, stawka to losowa wartość w przedziale od 1% do 5% salda konta, z gwarancją, że stawka nie będzie mniejsza niż 1.</li>
+<li>Jeśli gra w <strong>Ruletkę Zakresową (Range Roulette)</strong>, stawka to losowa wartość w przedziale od 5% do 50% salda konta, z gwarancją, że stawka nie będzie mniejsza niż 1.</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="struktura-bucketa-minio" class="level2">
+<h2 class="anchored" data-anchor-id="struktura-bucketa-minio">Struktura Bucketa MinIO</h2>
+<p>Dane kasyna oraz metadane związane z przepływem danych są przechowywane w buckecie MinIO w strukturze przedstawionej poniżej:</p>
+<pre><code>casino/
+├── checkpoint/
+│   ├── players/
+│   ├── games/
+│   └── transactions/
+├── warehouse/
+│   └── default/
+│       ├── players/
+│       │   ├── data/
+│       │   └── metadata/
+│       ├── games/
+│       │   ├── data/
+│       │   └── metadata/
+│       └── transactions/
+│           ├── data/
+│           └── metadata/</code></pre>
+<p>Dane kasyna są najpierw przesyłane do Apache Kafka, gdzie są przechowywane i przetwarzane. Następnie Spark odczytuje te dane z Kafka i przetwarza je. Przetworzone dane są zapisywane do MinIO w formacie Iceberg w katalogu warehouse.</p>
+<p>Katalog <code>checkpoint</code> zawiera dane i metadane związane z etapami przetwarzania danych w Apache Spark. Spark używa katalogu checkpoint, aby przechowywać dane pośrednie, które mogą zostać wykorzystane w przypadku wznowienia procesu przetwarzania.</p>
+<p>Katalog <code>warehouse</code> zawiera finalne dane oraz metadane. Są to dane pochodzące z tabel players, games i transactions, które zostały przetworzone przez Spark i zapisane do MinIO w formacie Iceberg.</p>
+<p>Wszystkie dane z kasyna, takie jak wyniki gier, stan konta gracza oraz inne istotne informacje, są przesyłane w polu <code>value.payload.after</code>.</p>
+</section>
+</section>
+<section id="wyniki" class="level1">
+<h1>Wyniki</h1>
+<p>Dane są przechowywane na MinIO w formacie Iceberg, gotowe do dalszej analizy. W zakładce <code>Report Casino</code> znajduję się przykładowy raport. (jeszcze go nie ma XD)</p>
+</section>
+<section id="jak-uruchomić" class="level1">
+<h1>Jak uruchomić</h1>
+<ol type="1">
+<li><p>Sklonuj repozytorium:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">git</span> clone https://github.com/wbonna352/casino.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Przejdź do katalogu projektu:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="bu">cd</span> casino</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Uruchom projekt:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="ex">docker-compose</span> up</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ol>
+</section>
+<section id="podsumowanie" class="level1">
+<h1>Podsumowanie</h1>
+<p>Projekt stanowi element portfolio w obszarze inżynierii danych, służąc jako okazja do zebrania doświadczenia i zaprezentowania wykorzystania różnych technologii. W projekcie wykorzystane zostały następujące technologie: Docker, PostgreSQL, Python, Debezium, Apache Kafka, Apache Spark, Apache Iceberg, MinIO, bash, R, Quarto.</p>
+<p>Celem projektu jest zbudowanie end-to-end przepływu danych, który obejmuje zbieranie danych od graczy, przechowywanie ich w bazie danych PostgreSQL, rejestrowanie zmian w bazie za pomocą Debezium, przesyłanie danych do systemu Kafka, przetwarzanie danych przez Apache Spark oraz zapis przetworzonych danych do MinIO w formacie Iceberg.</p>
+<p>Projekt pozwala na praktyczne zastosowanie umiejętności pracy z dużymi zbiorami danych oraz przetwarzaniem danych w czasie rzeczywistym, co stanowi cenne doświadczenie w pracy z nowoczesnymi technologiami big data.</p>
+<hr>
+<p><em>W przypadku pytań lub uwag proszę o kontakt: <a href="mailto:wojciechbonna@gmail.com">e-mail</a>.</em></p>
 
 
 </section>
