@@ -1,13 +1,231 @@
 ---
-title: "casino"
+title: "Casino"
+author: "Wojciech Bonna"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    code-line-numbers: true
+engine: knitr
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
 ```{r}
-1 + 1
+#| echo: false
+#| eval: true
+#| warning: false
+
+conn <- DBI::dbConnect(
+    RPostgres::Postgres(), 
+    host = "localhost", 
+    port = 5432, 
+    dbname = "casino", 
+    user = "casino", 
+    password = "casino"
+)
 ```
 
-# add some new content
+# Opis
+
+**Projekt symulacji kasyna** to projekt portfolio big data, którego celem jest symulacja środowiska kasyna. Prezentuje umiejętności w zakresie systemów rozproszonych, strumieniowania danych i formatów data lake. Projekt wykorzystuje **Docker Compose**, **Apache Kafka**, **PostgreSQL**, **Debezium**, **Spark Structured Streaming** oraz **MinIO z Apache Iceberg**. Projekt jest symlucją migracji danych z bazy do produkcyjnej do środowiska analitycznego. Link do repozytorium: [casino](https://github.com/wbonna352/casino).
+
+# Architektura
+
+Architektura projektu składa się z następujących komponentów:
+
+- **Gracze Kasyna**: Każdy z 3 graczy znajduje się w osobnym kontenerze Docker i gra w dwa rodzaje ruletki.
+- **PostgreSQL**: Działa jako początkowe miejsce przechowywania danych z gier.
+- **Debezium Connector**: Przechwytuje zmiany z PostgreSQL i strumieniuje je do Kafki.
+- **Apache Kafka**: Służy jako centralny kanał przetwarzania danych.
+- **Spark Structured Streaming**: Odczytuje dane z Kafki i zapisuje je na MinIO w formacie Iceberg.
+- **MinIO**: Obiektowy magazyn danych, wykorzystywany jako lokalny data lake
+
+
+# Implementacja
+
+## Docker Compose
+
+Projekt jest konteneryzowany za pomocą **Docker Compose** dla łatwego uruchamiania i orkiestracji.
+
+### Kontenery
+
+- **casino-postgres**: Kontener z bazą danych PostgreSQL, która jest bazą produkcyjną kasyna.
+- **casino-zookeeper**: Kontener Apache ZooKeeper, używany do zarządzania koordynacją Kafki.
+- **casino-kafka**: Kontener Apache Kafka, obsługujący przesyłanie strumieniowych danych między usługami.
+- **casino-debezium**: Kontener Debezium, służący do rejestrowania zmian w bazie danych PostgreSQL i przesyłania ich do Kafki.
+- **casino-curl**: Kontener z curl, używany do inicjowania połączenia Debezium z PostgreSQL.
+- **casino-init-db**: Kontener uruchamiający skrypt w Pythonie, który inicjalizuje bazę danych PostgreSQL.
+- **casino-minio**: Kontener MinIO, przechowujący dane w formacie Iceberg (obiektowe przechowywanie danych).
+- **casino-spark-master**: Kontener Spark Master, zarządzający zadaniami obliczeniowymi w klastrze Spark.
+- **casino-spark-worker**: Kontener Spark Worker, wykonujący zadania obliczeniowe rozdzielane przez Spark Master.
+- **casino-spark-players**: Kontener Spark do przetwarzania strumieniowych danych związanych z graczami.
+- **casino-spark-transactions**: Kontener Spark do przetwarzania strumieniowych danych związanych z transakcjami.
+- **casino-spark-games**: Kontener Spark do przetwarzania strumieniowych danych związanych z grami.
+- **casino-user1**: Kontener Python dla Gracza 1, symulujący interakcję z grą kasynową.
+- **casino-user2**: Kontener Python dla Gracza 2, symulujący interakcję z grą kasynową.
+- **casino-user3**: Kontener Python dla Gracza 3, symulujący interakcję z grą kasynową.
+
+
+
+## Flow danych
+
+Dane są generowane przez trzech graczy, którzy wysyłają informacje do bazy danych PostgreSQL. Zmiany w bazie danych są rejestrowane przez Debezium, który następnie przesyła je do systemu Kafka. Z Kafka, dane są odczytywane przez Spark i przetwarzane, a na końcu zapisywane do MinIO w formacie Iceberg.
+
+
+```{mermaid}
+graph TD
+    A[Player 1] --> D[Postgres]
+    B[Player 2] --> D
+    C[Player 3] --> D
+    D --> |Debezium| E[Kafka]
+    E --> |Spark| F[Minio]
+```
+
+## Baza produkcyjna
+
+Baza produkcyjna kasyna jest oparta na PostgreSQL i jest tworzona oraz zarządzana za pomocą **SQLAlchemy**.
+
+::: {.panel-tabset}
+
+### players
+
+```{sql}
+--| connection: conn
+--| eval: true
+--| echo: true
+
+SELECT *
+FROM players
+```
+
+### games
+
+```{sql}
+--| connection: conn
+--| eval: true
+--| echo: true
+
+SELECT *
+FROM games
+LIMIT 5
+```
+
+### transactions
+
+```{sql}
+--| connection: conn
+--| eval: true
+--| echo: true
+
+SELECT *
+FROM transactions
+LIMIT 5
+```
+
+:::
+
+## Rodzaje gier
+
+### Straight Roulette (Ruletka Prosta)
+- **Zasady**: Gracz stawia zakład na konkretny numer na kole ruletki (numery od 0 do 36). 
+- **Mechanizm**: Po zakręceniu kołem, losowany jest numer. 
+  - **Wygrana**: Gracz wygrywa, jeśli wylosowany numer to 0 (zero).
+  - **Przegrana**: W przeciwnym przypadku gracz przegrywa.
+- **Wypłata**: Jeśli gracz wygra (numer = 0), wypłata wynosi **36 razy stawka**. W przypadku przegranej wypłata wynosi 0.
+
+### Range Roulette (Ruletka Zakresowa)
+- **Zasady**: Gracz stawia zakład na to, czy wylosowany numer na kole ruletki będzie większy niż 18.
+- **Mechanizm**: Po zakręceniu kołem, losowany jest numer.
+  - **Wygrana**: Gracz wygrywa, jeśli wylosowany numer jest większy niż 18 (czyli w zakresie od 19 do 36).
+  - **Przegrana**: Gracz przegrywa, jeśli numer jest w zakresie od 0 do 18.
+- **Wypłata**: Jeśli gracz wygra (numer > 18), wypłata wynosi **2 razy stawka**. W przypadku przegranej wypłata wynosi 0.
+
+### W obu przypadkach:
+- **Wynik**: Określany jest przez losowanie numeru i porównanie go z odpowiednią wartością lub zakresem.
+- **Payout (wypłata)**: Kwota, którą gracz otrzymuje, jeśli wygra, lub 0, jeśli przegra.
+
+
+## Strategie Graczy
+
+::: {.callout-note}
+Dane graczy użyte w tym projekcie są fikcyjne i zostały stworzone wyłącznie w celach demonstracyjnych.
+:::
+
+### Ethan Clark
+
+  - Ethan gra w **Ruletkę Zakresową (Range Roulette)**.
+  - Czas oczekiwania przed każdym zakładem wynosi losowo od 1 do 60 sekund.
+  - Stawka jest obliczana na podstawie salda konta gracza, gdzie stawka to losowa wartość w przedziale od 5% do 50% salda konta, z gwarancją, że stawka nie będzie mniejsza niż 1.
+  
+### Olivia Bennett
+
+  - Olivia gra w **Prostą Ruletkę (Straight Roulette)**.
+  - Czas oczekiwania przed zakładem wynosi losowo od 1 do 15 sekund.
+  - Stawka jest obliczana na podstawie salda konta gracza, gdzie stawka to losowa wartość w przedziale od 1% do 10% salda konta, z gwarancją, że stawka nie będzie mniejsza niż 1.
+  
+### Lucas Hayes
+
+  - Lucas gra w jedną z dwóch gier: **Prostą Ruletkę (Straight Roulette)** lub **Ruletkę Zakresową (Range Roulette)**.
+  - Czas oczekiwania przed zakładem wynosi losowo od 10 do 60 sekund.
+  - Wybór gry jest losowy. Dla każdej z gier:
+    - Jeśli gra w **Prostą Ruletkę (Straight Roulette)**, stawka to losowa wartość w przedziale od 1% do 5% salda konta, z gwarancją, że stawka nie będzie mniejsza niż 1.
+    - Jeśli gra w **Ruletkę Zakresową (Range Roulette)**, stawka to losowa wartość w przedziale od 5% do 50% salda konta, z gwarancją, że stawka nie będzie mniejsza niż 1.
+
+## Struktura Bucketa MinIO
+
+Dane kasyna oraz metadane związane z przepływem danych są przechowywane w buckecie MinIO w strukturze przedstawionej poniżej:
+
+```
+casino/
+├── checkpoint/
+│   ├── players/
+│   ├── games/
+│   └── transactions/
+├── warehouse/
+│   └── default/
+│       ├── players/
+│       │   ├── data/
+│       │   └── metadata/
+│       ├── games/
+│       │   ├── data/
+│       │   └── metadata/
+│       └── transactions/
+│           ├── data/
+│           └── metadata/
+```
+
+Dane kasyna są najpierw przesyłane do Apache Kafka, gdzie są przechowywane i przetwarzane. Następnie Spark odczytuje te dane z Kafka i przetwarza je. Przetworzone dane są zapisywane do MinIO w formacie Iceberg w katalogu warehouse.
+
+Katalog `checkpoint` zawiera dane i metadane związane z etapami przetwarzania danych w Apache Spark. Spark używa katalogu checkpoint, aby przechowywać dane pośrednie, które mogą zostać wykorzystane w przypadku wznowienia procesu przetwarzania.
+
+Katalog `warehouse` zawiera finalne dane oraz metadane. Są to dane pochodzące z tabel players, games i transactions, które zostały przetworzone przez Spark i zapisane do MinIO w formacie Iceberg.
+
+# Wyniki
+
+Dane są przechowywane na MinIO w formacie Iceberg, gotowe do dalszej analizy. W zakładce `Report` znajduję się przykładowy raport. 
+
+# Jak uruchomić
+
+1. Sklonuj repozytorium:
+   ```bash
+   git clone https://github.com/wbonna352/casino.git
+   ```
+2. Przejdź do katalogu projektu:
+   ```bash
+   cd casino
+   ```
+3. Uruchom projekt:
+   ```bash
+   docker-compose up
+   ```
+
+# Podsumowanie
+
+Projekt stanowi element portfolio w obszarze inżynierii danych, służąc jako okazja do zebrania doświadczenia i zaprezentowania wykorzystania różnych technologii. W projekcie wykorzystane zostały następujące technologie: Docker, PostgreSQL, Python, Debezium, Apache Kafka, Apache Spark, Apache Iceberg, MinIO, bash, R, Quarto. 
+
+Celem projektu jest zbudowanie end-to-end przepływu danych, który obejmuje zbieranie danych od graczy, przechowywanie ich w bazie danych PostgreSQL, rejestrowanie zmian w bazie za pomocą Debezium, przesyłanie danych do systemu Kafka, przetwarzanie danych przez Apache Spark oraz zapis przetworzonych danych do MinIO w formacie Iceberg.
+
+Projekt pozwala na praktyczne zastosowanie umiejętności pracy z dużymi zbiorami danych oraz przetwarzaniem danych w czasie rzeczywistym, co stanowi cenne doświadczenie w pracy z nowoczesnymi technologiami big data.
+
+
+---
+
+*W przypadku pytań lub uwag proszę o kontakt: [e-mail](mailto:wojciechbonna@gmail.com).*

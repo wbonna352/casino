@@ -1,0 +1,232 @@
+---
+title: "Casino Report"
+engine: jupyter
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{python}
+from casino_spark.main import default_spark
+from casino_spark.functions import bigint_to_timestamp, first_record_by_pk
+
+from pyspark.sql import DataFrame, Window
+from pyspark.sql import functions as F, types as T
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from matplotlib.ticker import FuncFormatter
+import seaborn as sns
+
+from datetime import datetime
+from IPython.display import Markdown, display
+```
+
+```{python}
+now = datetime.now()
+```
+
+```{python}
+spark = default_spark()
+```
+
+```{python}
+def prepare_data(table_name: str) -> DataFrame:
+  return (
+    spark.read.table(table_name)
+    .select("value.*")
+    .withColumn("time", bigint_to_timestamp(F.coalesce("updated_at", "created_at")))
+    .filter(F.col("time") <= now)
+    .withColumn("updated_at", bigint_to_timestamp(F.col("updated_at")))
+    .withColumn("created_at", bigint_to_timestamp(F.col("created_at")))
+  )
+
+```
+
+```{python}
+data = {
+  table_name: prepare_data(table_name).cache() 
+  for table_name in ["players", "transactions", "games"]
+}
+```
+
+
+::: {.callout-note}
+Stan na `{python} now.strftime("%Y-%m-%d %H:%M:%S")`
+:::
+
+
+### Aktualny stan graczy
+
+```{python}
+players_info = (
+  data
+  .get("players")
+  .transform(first_record_by_pk, [F.col("id")], [F.col("time").desc()])
+  .select(
+    "id",
+    F.concat("first_name", F.lit(" "), "last_name").alias("name"),
+    "email",
+    "account_balance",
+    "updated_at"
+  )
+)
+
+players_info.toPandas().to_html(index=False)
+```
+
+### Ostatnie 10 gier
+
+```{python}
+(
+  data
+  .get("games")
+  .orderBy(F.desc("created_at"))
+  .limit(10)
+  .join(
+    (
+      players_info
+      .select(
+        F.col("id").alias("player_id"),
+        F.col("name")
+      )
+    ), ["player_id"]
+  )
+  .select(
+    "name",
+    "type",
+    "stake",
+    "result",
+    "payout",
+    "created_at"
+  )
+
+).toPandas().to_html(index=False)
+```
+
+### 5 największych wygranych
+```{python}
+(
+  data
+  .get("games")
+  .orderBy(F.desc("payout"))
+  .limit(5)
+  .join(
+    (
+      players_info
+      .select(
+        F.col("id").alias("player_id"),
+        F.col("name")
+      )
+    ), ["player_id"]
+  )
+  .select(
+    "name",
+    "type",
+    "stake",
+    "payout",
+    "created_at"
+  )
+
+).toPandas().to_html(index=False)
+```
+
+## Historia stanu konta gracza
+
+```{python}
+def account_history_plot(player_id: int) -> None:
+
+  raw_data = (
+    data
+    .get("players")
+    .filter(F.col("id") == player_id)
+  )
+
+  df = raw_data.toPandas()
+
+  fig, ax = plt.subplots()
+
+  sns.lineplot(
+      data=df,
+      x="time",
+      y="account_balance",
+      ax=ax,
+      drawstyle="steps-post"
+  )
+
+  ax.yaxis.set_major_formatter(
+      FuncFormatter(lambda x, _: f"{int(x):,}".replace(",", " "))
+  )
+
+  ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
+
+  plt.xticks(rotation=45)
+
+  ax.set_xlabel("")
+  ax.set_ylabel("")
+
+  plt.tight_layout()
+
+  plt.show()
+
+def get_player_name(player_id: int) -> str:
+    return players_info.filter(F.col("id") == player_id).first()["name"]
+
+```
+
+::: {.panel-tabset}
+
+### `{python} get_player_name(1)`
+
+```{python}
+account_history_plot(1)
+```
+
+### `{python} get_player_name(2)`
+
+```{python}
+account_history_plot(2)
+```
+
+### `{python} get_player_name(3)`
+
+```{python}
+account_history_plot(3)
+```
+
+:::
+
+## Podsumowanie 
+
+```{python}
+transactions_agg = (
+  data
+  .get("transactions")
+  .groupBy("player_id")
+  .pivot("type")
+  .agg(F.sum("value"))
+)
+
+games_agg = (
+  data
+  .get("games")
+  .groupBy("player_id")
+  .agg(
+    F.sum("stake").alias("stakes"),
+    F.sum("payout").alias("payouts"),
+    F.count_if(F.col("result") == F.lit("win")).alias("games_win"),
+    F.count_if(F.col("result") == F.lit("loss")).alias("games_loss")
+  )
+)
+
+(
+  players_info
+  .select("name", F.col("id").alias("player_id"))
+  .join(transactions_agg, ["player_id"], how="left")
+  .join(games_agg, ["player_id"], how="left")
+  .drop("player_id")
+).toPandas().to_html(index=False)
+
+```
