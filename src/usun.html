@@ -130,7 +130,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html"> 
+    <a class="nav-link" href="../report.html"> 
 <span class="menu-text">Casino Report</span></a>
   </li>  
 </ul>
@@ -153,30 +153,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<div id="cell-0" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T18:46:25.194772028Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T18:46:25.154660641Z&quot;}" data-execution_count="32">
+<div id="cell-0" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-13T16:30:57.909048869Z&quot;,&quot;start_time&quot;:&quot;2024-12-13T16:30:57.874638233Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> casino_spark.main <span class="im">import</span> default_spark</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> casino_spark.functions <span class="im">import</span> bigint_to_timestamp</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyspark.sql.functions <span class="im">as</span> F</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyspark.sql.functions <span class="im">as</span> F</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> DataFrame</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-1" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T18:46:31.465437187Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T18:46:26.172419451Z&quot;}" data-execution_count="33">
+<div id="cell-1" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-13T16:31:03.372388944Z&quot;,&quot;start_time&quot;:&quot;2024-12-13T16:30:59.384793176Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> default_spark()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>24/12/12 19:46:27 WARN Utils: Your hostname, ubuntu-main resolves to a loopback address: 127.0.1.1; using 192.168.33.10 instead (on interface wlp0s20f3)
-24/12/12 19:46:27 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address</code></pre>
+<pre><code>24/12/13 17:31:00 WARN Utils: Your hostname, ubuntu-main resolves to a loopback address: 127.0.1.1; using 192.168.33.5 instead (on interface enp0s31f6)
+24/12/13 17:31:00 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+Ivy Default Cache set to: /home/wbonna/.ivy2/cache
+The jars for the packages stored in: /home/wbonna/.ivy2/jars</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>:: loading settings :: url = jar:file:/home/wbonna/repos/github/casino/.venv/lib/python3.11/site-packages/pyspark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Ivy Default Cache set to: /home/wbonna/.ivy2/cache
-The jars for the packages stored in: /home/wbonna/.ivy2/jars
-org.apache.spark#spark-sql-kafka-0-10_2.12 added as a dependency
+<pre><code>org.apache.spark#spark-sql-kafka-0-10_2.12 added as a dependency
 org.apache.hadoop#hadoop-aws added as a dependency
 org.apache.hadoop#hadoop-client-api added as a dependency
 org.apache.hadoop#hadoop-client-runtime added as a dependency
 com.amazonaws#aws-java-sdk-bundle added as a dependency
-org.apache.iceberg#iceberg-spark-runtime-3.5_2.13 added as a dependency
-:: resolving dependencies :: org.apache.spark#spark-submit-parent-c7614451-82f9-4a84-84bb-f6a6934bf6cf;1.0
+org.apache.iceberg#iceberg-spark-runtime-3.5_2.12 added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-aa493dc9-8030-4a97-a330-22d67d4e088b;1.0
     confs: [default]
     found org.apache.spark#spark-sql-kafka-0-10_2.12;3.5.0 in central
     found org.apache.spark#spark-token-provider-kafka-0-10_2.12;3.5.0 in central
@@ -192,8 +199,8 @@ org.apache.iceberg#iceberg-spark-runtime-3.5_2.13 added as a dependency
     found org.apache.hadoop#hadoop-aws;3.3.4 in central
     found com.amazonaws#aws-java-sdk-bundle;1.12.262 in central
     found org.wildfly.openssl#wildfly-openssl;1.0.7.Final in central
-    found org.apache.iceberg#iceberg-spark-runtime-3.5_2.13;1.4.0 in central
-:: resolution report :: resolve 611ms :: artifacts dl 20ms
+    found org.apache.iceberg#iceberg-spark-runtime-3.5_2.12;1.4.0 in central
+:: resolution report :: resolve 401ms :: artifacts dl 14ms
     :: modules in use:
     com.amazonaws#aws-java-sdk-bundle;1.12.262 from central in [default]
     com.google.code.findbugs#jsr305;3.0.0 from central in [default]
@@ -202,7 +209,7 @@ org.apache.iceberg#iceberg-spark-runtime-3.5_2.13 added as a dependency
     org.apache.hadoop#hadoop-aws;3.3.4 from central in [default]
     org.apache.hadoop#hadoop-client-api;3.3.4 from central in [default]
     org.apache.hadoop#hadoop-client-runtime;3.3.4 from central in [default]
-    org.apache.iceberg#iceberg-spark-runtime-3.5_2.13;1.4.0 from central in [default]
+    org.apache.iceberg#iceberg-spark-runtime-3.5_2.12;1.4.0 from central in [default]
     org.apache.kafka#kafka-clients;3.4.1 from central in [default]
     org.apache.spark#spark-sql-kafka-0-10_2.12;3.5.0 from central in [default]
     org.apache.spark#spark-token-provider-kafka-0-10_2.12;3.5.0 from central in [default]
@@ -216,21 +223,68 @@ org.apache.iceberg#iceberg-spark-runtime-3.5_2.13 added as a dependency
     ---------------------------------------------------------------------
     |      default     |   15  |   0   |   0   |   0   ||   15  |   0   |
     ---------------------------------------------------------------------
-:: retrieving :: org.apache.spark#spark-submit-parent-c7614451-82f9-4a84-84bb-f6a6934bf6cf
+:: retrieving :: org.apache.spark#spark-submit-parent-aa493dc9-8030-4a97-a330-22d67d4e088b
     confs: [default]
-    0 artifacts copied, 15 already retrieved (0kB/13ms)
-24/12/12 19:46:28 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+    0 artifacts copied, 15 already retrieved (0kB/10ms)
+24/12/13 17:31:01 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).</code></pre>
 </div>
 </div>
-<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T18:57:27.512497943Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T18:57:26.977382101Z&quot;}" data-execution_count="41">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    spark.read.table(<span class="st">"players"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(<span class="st">"offset == 0"</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    .select(<span class="st">"value.payload.after.*"</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>).toPandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="41">
+<div id="cell-2" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-13T16:31:11.694867443Z&quot;,&quot;start_time&quot;:&quot;2024-12-13T16:31:04.611700585Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>now <span class="op">=</span> datetime.now()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> table <span class="kw">in</span> [<span class="st">"players"</span>, <span class="st">"transactions"</span>, <span class="st">"games"</span>]:</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(spark.table(table).<span class="bu">filter</span>(F.col(<span class="st">"timestamp"</span>) <span class="op">&lt;</span> now).count())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>24/12/13 17:31:05 WARN MetricsConfig: Cannot locate configuration: tried hadoop-metrics2-s3a-file-system.properties,hadoop-metrics2.properties
+                                                                                </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>118
+3
+112</code></pre>
+</div>
+</div>
+<div id="cell-3" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-13T16:33:09.097330929Z&quot;,&quot;start_time&quot;:&quot;2024-12-13T16:33:06.948714327Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> table <span class="kw">in</span> [<span class="st">"players"</span>, <span class="st">"games"</span>, <span class="st">"transactions"</span>]:</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(table)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    spark.table(table).select(F.count(<span class="st">"*"</span>), F.countDistinct(<span class="st">"offset"</span>)).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>players</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>                                                                                </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+--------+----------------------+
+|count(1)|count(DISTINCT offset)|
++--------+----------------------+
+|     142|                   142|
++--------+----------------------+
+
+games
++--------+----------------------+
+|count(1)|count(DISTINCT offset)|
++--------+----------------------+
+|     136|                   136|
++--------+----------------------+
+
+transactions
++--------+----------------------+
+|count(1)|count(DISTINCT offset)|
++--------+----------------------+
+|       3|                     3|
++--------+----------------------+
+</code></pre>
+</div>
+</div>
+<div id="cell-4" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-13T16:30:36.708269960Z&quot;,&quot;start_time&quot;:&quot;2024-12-13T16:30:36.562153838Z&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>spark.sql(<span class="st">"""</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="st">SELECT value.*</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="st">FROM players</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="st">WHERE value.updated_at is null</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>).toPandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
 <div>
 
 
@@ -251,11 +305,31 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>1</td>
+<td>Olivia</td>
+<td>Bennett</td>
+<td>olivia.bennett@example.com</td>
+<td>0.0</td>
+<td>1734110280844981</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>Lucas</td>
+<td>Hayes</td>
+<td>lucas.hayes@example.com</td>
+<td>0.0</td>
+<td>1734110280939854</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
 <td>Ethan</td>
 <td>Clark</td>
 <td>ethan.clark@example.com</td>
 <td>0.0</td>
-<td>1734032750722821</td>
+<td>1734110280953703</td>
 <td>NaN</td>
 </tr>
 </tbody>
@@ -264,653 +338,100 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </div>
 </div>
 </div>
-<div id="cell-3" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T13:54:49.595051647Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T13:54:49.495886206Z&quot;}" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>silver_players <span class="op">=</span> (</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    spark.read.table(<span class="st">"players"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    .select(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"timestamp"</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"value.payload.after.*"</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    .withColumn(<span class="st">"created_at"</span>, bigint_to_timestamp(F.col(<span class="st">"created_at"</span>)))</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    .withColumn(<span class="st">"updated_at"</span>, bigint_to_timestamp(F.col(<span class="st">"updated_at"</span>)))</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-5" class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>spark.read.table(<span class="st">"games"</span>).count()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-4" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T13:53:47.942059493Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T13:53:46.978714680Z&quot;}" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    spark.read.table(<span class="st">"players"</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    .select(</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"value.payload.after.*"</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>).toPandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">id</th>
-<th data-quarto-table-cell-role="th">first_name</th>
-<th data-quarto-table-cell-role="th">last_name</th>
-<th data-quarto-table-cell-role="th">email</th>
-<th data-quarto-table-cell-role="th">account_balance</th>
-<th data-quarto-table-cell-role="th">created_at</th>
-<th data-quarto-table-cell-role="th">updated_at</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>1</td>
-<td>Olivia</td>
-<td>Bennett</td>
-<td>olivia.bennett@example.com</td>
-<td>696.35</td>
-<td>1734014694645582</td>
-<td>1.734015e+15</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>2</td>
-<td>Lucas</td>
-<td>Hayes</td>
-<td>lucas.hayes@example.com</td>
-<td>1080.48</td>
-<td>1734014695167237</td>
-<td>1.734015e+15</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>1</td>
-<td>Olivia</td>
-<td>Bennett</td>
-<td>olivia.bennett@example.com</td>
-<td>1848.04</td>
-<td>1734014694645582</td>
-<td>1.734015e+15</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>3</td>
-<td>Ethan</td>
-<td>Clark</td>
-<td>ethan.clark@example.com</td>
-<td>693.68</td>
-<td>1734014695388099</td>
-<td>1.734015e+15</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>1</td>
-<td>Olivia</td>
-<td>Bennett</td>
-<td>olivia.bennett@example.com</td>
-<td>2909.93</td>
-<td>1734014694645582</td>
-<td>1.734015e+15</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">90</td>
-<td>1</td>
-<td>Olivia</td>
-<td>Bennett</td>
-<td>olivia.bennett@example.com</td>
-<td>609.67</td>
-<td>1734014694645582</td>
-<td>1.734015e+15</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">91</td>
-<td>2</td>
-<td>Lucas</td>
-<td>Hayes</td>
-<td>lucas.hayes@example.com</td>
-<td>1113.90</td>
-<td>1734014695167237</td>
-<td>1.734015e+15</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">92</td>
-<td>1</td>
-<td>Olivia</td>
-<td>Bennett</td>
-<td>olivia.bennett@example.com</td>
-<td>2706.23</td>
-<td>1734014694645582</td>
-<td>1.734015e+15</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">93</td>
-<td>3</td>
-<td>Ethan</td>
-<td>Clark</td>
-<td>ethan.clark@example.com</td>
-<td>109.81</td>
-<td>1734014695388099</td>
-<td>1.734015e+15</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">94</td>
-<td>1</td>
-<td>Olivia</td>
-<td>Bennett</td>
-<td>olivia.bennett@example.com</td>
-<td>402.41</td>
-<td>1734014694645582</td>
-<td>1.734015e+15</td>
-</tr>
-</tbody>
-</table>
-
-<p>95 rows × 7 columns</p>
+<div id="cell-6" class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    spark.table(<span class="st">"players"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    .select(F.<span class="bu">min</span>(<span class="st">"offset"</span>))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    .collect()</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    ,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    spark.table(<span class="st">"players"</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    .select(F.<span class="bu">min</span>(<span class="st">"offset"</span>), F.<span class="bu">sum</span>(<span class="st">"offset"</span>))</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    .collect()</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="cell-7" class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>players <span class="op">=</span> spark.table(<span class="st">"players"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>players.cache()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="cell-8" class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    spark.table(<span class="st">"players"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    .select(F.<span class="bu">min</span>(<span class="st">"value.payload.after.created_at"</span>))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    .collect()</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-5" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T13:08:46.064640308Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T13:07:03.236157437Z&quot;}" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    spark</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    .readStream</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">format</span>(<span class="st">"iceberg"</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    .table(<span class="st">"players"</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    .select(</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"value.payload.after.*"</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    .writeStream</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    .outputMode(<span class="st">"append"</span>)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">format</span>(<span class="st">"console"</span>)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    .start()</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    .awaitTermination()</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>24/12/12 14:07:04 WARN MetricsConfig: Cannot locate configuration: tried hadoop-metrics2-s3a-file-system.properties,hadoop-metrics2.properties
-24/12/12 14:07:05 WARN ResolveWriteToStream: spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
-                                                                                </code></pre>
+<div id="cell-9" class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    spark.table(<span class="st">"transactions"</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    .withColumn(<span class="st">"x"</span>, F.col(<span class="st">"value.payload.after.created_at"</span>).cast(<span class="st">"int"</span>))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    .select(F.<span class="bu">min</span>(<span class="st">"x"</span>))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    .collect()</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>-------------------------------------------
-Batch: 0
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  1|     Ethan|    Clark|ethan.clark@examp...|            0.0|1734010728213444|            NULL|
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|            0.0|1734010728317774|            NULL|
-|  3|     Lucas|    Hayes|lucas.hayes@examp...|            0.0|1734010729649266|            NULL|
-|  1|     Ethan|    Clark|ethan.clark@examp...|         1000.0|1734010728213444|1734010728217311|
-|  3|     Lucas|    Hayes|lucas.hayes@examp...|         1000.0|1734010729649266|1734010729652584|
-|  3|     Lucas|    Hayes|lucas.hayes@examp...|          930.0|1734010729649266|1734010755690686|
-|  1|     Ethan|    Clark|ethan.clark@examp...|          710.0|1734010728213444|1734010754254173|
-|  1|     Ethan|    Clark|ethan.clark@examp...|          965.6|1734010728213444|1734010767279528|
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|         1000.0|1734010728317774|1734010728321185|
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          920.0|1734010728317774|1734010787394351|
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          883.2|1734010728317774|1734010790410388|
-|  1|     Ethan|    Clark|ethan.clark@examp...|          637.3|1734010728213444|1734010782308872|
-|  3|     Lucas|    Hayes|lucas.hayes@examp...|          781.2|1734010729649266|1734010766713364|
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|         847.87|1734010728317774|1734010799424165|
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|         830.91|1734010728317774|1734010812448922|
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|         805.98|1734010728317774|1734010819467250|
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|         733.44|1734010728317774|1734010823482759|
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|         667.43|1734010728317774|1734010826496771|
-|  3|     Lucas|    Hayes|lucas.hayes@examp...|          390.6|1734010729649266|1734010809764151|
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|         600.69|1734010728317774|1734010833508719|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-only showing top 20 rows
-
--------------------------------------------
-Batch: 1
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          25.77|1734010728317774|1734012418547388|
-|  3|     Lucas|    Hayes|lucas.hayes@examp...|          11.08|1734010729649266|1734012415683523|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 2
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          23.97|1734010728317774|1734012427560026|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 3
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          22.05|1734010728317774|1734012441583653|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 4
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  3|     Lucas|    Hayes|lucas.hayes@examp...|           6.54|1734010729649266|1734012429707098|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 5
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          20.29|1734010728317774|1734012444595635|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 6
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  1|     Ethan|    Clark|ethan.clark@examp...|           3.62|1734010728213444|1734012415289826|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 7
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  3|     Lucas|    Hayes|lucas.hayes@examp...|           5.54|1734010729649266|1734012446729071|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 8
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          19.07|1734010728317774|1734012454614946|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 9
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  1|     Ethan|    Clark|ethan.clark@examp...|           2.14|1734010728213444|1734012457341140|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 10
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  3|     Lucas|    Hayes|lucas.hayes@examp...|           4.54|1734010729649266|1734012461752099|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 11
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          18.07|1734010728317774|1734012468638898|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 12
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          17.07|1734010728317774|1734012482655233|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 13
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          16.07|1734010728317774|1734012483658108|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 14
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          15.07|1734010728317774|1734012494677034|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 15
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  3|     Lucas|    Hayes|lucas.hayes@examp...|           2.41|1734010729649266|1734012473772954|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 16
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          14.07|1734010728317774|1734012502692845|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 17
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  2|    Olivia|  Bennett|olivia.bennett@ex...|          13.07|1734010728317774|1734012510702755|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-
--------------------------------------------
-Batch: 18
--------------------------------------------
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-| id|first_name|last_name|               email|account_balance|      created_at|      updated_at|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-|  3|     Lucas|    Hayes|lucas.hayes@examp...|           3.41|1734010729649266|1734012507815074|
-+---+----------+---------+--------------------+---------------+----------------+----------------+
-</code></pre>
+<div id="cell-10" class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>spark.table(<span class="st">"players"</span>).select(F.<span class="bu">min</span>(<span class="st">"offset"</span>)).show()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>players <span class="op">=</span> spark.table(<span class="st">"players"</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>players.cache()</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>players.select(F.<span class="bu">min</span>(<span class="st">"offset"</span>)).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>ERROR:root:KeyboardInterrupt while sending command.
-Traceback (most recent call last):
-  File "/home/wbonna/repos/github/casino/.venv/lib/python3.11/site-packages/py4j/java_gateway.py", line 1038, in send_command
-    response = connection.send_command(command)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/wbonna/repos/github/casino/.venv/lib/python3.11/site-packages/py4j/clientserver.py", line 511, in send_command
-    answer = smart_decode(self.stream.readline()[:-1])
-                          ^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.11/socket.py", line 718, in readinto
-    return self._sock.recv_into(b)
-           ^^^^^^^^^^^^^^^^^^^^^^^
-KeyboardInterrupt</code></pre>
+<div id="cell-11" class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>spark.sql(<span class="st">"SELECT * FROM default.players.history order by made_current_at limit 1"</span>).toPandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell-output cell-output-error">
-<div class="ansi-escaped-output">
-<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">KeyboardInterrupt</span>                         Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[3], line 13</span>
-<span class="ansi-green-fg ansi-bold">      1</span> (
-<span class="ansi-green-fg ansi-bold">      2</span>     <span class="ansi-yellow-bg">spark</span>
-<span class="ansi-green-fg ansi-bold">      3</span> <span class="ansi-yellow-bg">    </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">readStream</span>
-<span class="ansi-green-fg ansi-bold">      4</span> <span class="ansi-yellow-bg">    </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">format</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">iceberg</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">      5</span> <span class="ansi-yellow-bg">    </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">table</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">players</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">      6</span> <span class="ansi-yellow-bg">    </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">select</span><span class="ansi-yellow-bg">(</span>
-<span class="ansi-green-fg ansi-bold">      7</span> <span class="ansi-yellow-bg">        </span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">value.payload.after.*</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span>
-<span class="ansi-green-fg ansi-bold">      8</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">      9</span> <span class="ansi-yellow-bg">    </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">writeStream</span>
-<span class="ansi-green-fg ansi-bold">     10</span> <span class="ansi-yellow-bg">    </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">outputMode</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">append</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">     11</span> <span class="ansi-yellow-bg">    </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">format</span><span class="ansi-yellow-bg">(</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">console</span><span style="color:rgb(175,0,0)" class="ansi-yellow-bg">"</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">     12</span> <span class="ansi-yellow-bg">    </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">start</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">---&gt; 13</span> <span class="ansi-yellow-bg">    </span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">awaitTermination</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">     14</span> )
-
-File <span class="ansi-green-fg">~/repos/github/casino/.venv/lib/python3.11/site-packages/pyspark/sql/streaming/query.py:221</span>, in <span class="ansi-cyan-fg">StreamingQuery.awaitTermination</span><span class="ansi-blue-fg">(self, timeout)</span>
-<span class="ansi-green-fg ansi-bold">    219</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>_jsq<span style="color:rgb(98,98,98)">.</span>awaitTermination(<span style="color:rgb(0,135,0)">int</span>(timeout <span style="color:rgb(98,98,98)">*</span> <span style="color:rgb(98,98,98)">1000</span>))
-<span class="ansi-green-fg ansi-bold">    220</span> <span style="font-weight:bold;color:rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">--&gt; 221</span>     <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_jsq</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">awaitTermination</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/repos/github/casino/.venv/lib/python3.11/site-packages/py4j/java_gateway.py:1321</span>, in <span class="ansi-cyan-fg">JavaMember.__call__</span><span class="ansi-blue-fg">(self, *args)</span>
-<span class="ansi-green-fg ansi-bold">   1314</span> args_command, temp_args <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>_build_args(<span style="color:rgb(98,98,98)">*</span>args)
-<span class="ansi-green-fg ansi-bold">   1316</span> command <span style="color:rgb(98,98,98)">=</span> proto<span style="color:rgb(98,98,98)">.</span>CALL_COMMAND_NAME <span style="color:rgb(98,98,98)">+</span>\
-<span class="ansi-green-fg ansi-bold">   1317</span>     <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>command_header <span style="color:rgb(98,98,98)">+</span>\
-<span class="ansi-green-fg ansi-bold">   1318</span>     args_command <span style="color:rgb(98,98,98)">+</span>\
-<span class="ansi-green-fg ansi-bold">   1319</span>     proto<span style="color:rgb(98,98,98)">.</span>END_COMMAND_PART
-<span class="ansi-green-fg">-&gt; 1321</span> answer <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">gateway_client</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">send_command</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">command</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">   1322</span> return_value <span style="color:rgb(98,98,98)">=</span> get_return_value(
-<span class="ansi-green-fg ansi-bold">   1323</span>     answer, <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>gateway_client, <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>target_id, <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>name)
-<span class="ansi-green-fg ansi-bold">   1325</span> <span style="font-weight:bold;color:rgb(0,135,0)">for</span> temp_arg <span style="font-weight:bold;color:rgb(175,0,255)">in</span> temp_args:
-
-File <span class="ansi-green-fg">~/repos/github/casino/.venv/lib/python3.11/site-packages/py4j/java_gateway.py:1038</span>, in <span class="ansi-cyan-fg">GatewayClient.send_command</span><span class="ansi-blue-fg">(self, command, retry, binary)</span>
-<span class="ansi-green-fg ansi-bold">   1036</span> connection <span style="color:rgb(98,98,98)">=</span> <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>_get_connection()
-<span class="ansi-green-fg ansi-bold">   1037</span> <span style="font-weight:bold;color:rgb(0,135,0)">try</span>:
-<span class="ansi-green-fg">-&gt; 1038</span>     response <span style="color:rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">connection</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">send_command</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">command</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">   1039</span>     <span style="font-weight:bold;color:rgb(0,135,0)">if</span> binary:
-<span class="ansi-green-fg ansi-bold">   1040</span>         <span style="font-weight:bold;color:rgb(0,135,0)">return</span> response, <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>_create_connection_guard(connection)
-
-File <span class="ansi-green-fg">~/repos/github/casino/.venv/lib/python3.11/site-packages/py4j/clientserver.py:511</span>, in <span class="ansi-cyan-fg">ClientServerConnection.send_command</span><span class="ansi-blue-fg">(self, command)</span>
-<span class="ansi-green-fg ansi-bold">    509</span> <span style="font-weight:bold;color:rgb(0,135,0)">try</span>:
-<span class="ansi-green-fg ansi-bold">    510</span>     <span style="font-weight:bold;color:rgb(0,135,0)">while</span> <span style="font-weight:bold;color:rgb(0,135,0)">True</span>:
-<span class="ansi-green-fg">--&gt; 511</span>         answer <span style="color:rgb(98,98,98)">=</span> smart_decode(<span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>stream<span style="color:rgb(98,98,98)">.</span>readline()[:<span style="color:rgb(98,98,98)">-</span><span style="color:rgb(98,98,98)">1</span>])
-<span class="ansi-green-fg ansi-bold">    512</span>         logger<span style="color:rgb(98,98,98)">.</span>debug(<span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">Answer received: </span><span style="font-weight:bold;color:rgb(175,95,135)">{0}</span><span style="color:rgb(175,0,0)">"</span><span style="color:rgb(98,98,98)">.</span>format(answer))
-<span class="ansi-green-fg ansi-bold">    513</span>         <span style="font-style:italic;color:rgb(95,135,135)"># Happens when a the other end is dead. There might be an empty</span>
-<span class="ansi-green-fg ansi-bold">    514</span>         <span style="font-style:italic;color:rgb(95,135,135)"># answer before the socket raises an error.</span>
-
-File <span class="ansi-green-fg">/usr/lib/python3.11/socket.py:718</span>, in <span class="ansi-cyan-fg">SocketIO.readinto</span><span class="ansi-blue-fg">(self, b)</span>
-<span class="ansi-green-fg ansi-bold">    716</span> <span style="font-weight:bold;color:rgb(0,135,0)">while</span> <span style="font-weight:bold;color:rgb(0,135,0)">True</span>:
-<span class="ansi-green-fg ansi-bold">    717</span>     <span style="font-weight:bold;color:rgb(0,135,0)">try</span>:
-<span class="ansi-green-fg">--&gt; 718</span>         <span style="font-weight:bold;color:rgb(0,135,0)">return</span> <span style="color:rgb(0,135,0)" class="ansi-yellow-bg">self</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_sock</span><span style="color:rgb(98,98,98)" class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">recv_into</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">b</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg ansi-bold">    719</span>     <span style="font-weight:bold;color:rgb(0,135,0)">except</span> timeout:
-<span class="ansi-green-fg ansi-bold">    720</span>         <span style="color:rgb(0,135,0)">self</span><span style="color:rgb(98,98,98)">.</span>_timeout_occurred <span style="color:rgb(98,98,98)">=</span> <span style="font-weight:bold;color:rgb(0,135,0)">True</span>
-
-<span class="ansi-red-fg">KeyboardInterrupt</span>: </pre>
+<div id="cell-12" class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>spark.sql(<span class="st">"select * from default.players version as of 4789673466297209583 order by offset"</span>).toPandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="cell-13" class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>spark.table(<span class="st">"players"</span>).select(F.<span class="bu">min</span>(<span class="st">"offset"</span>), F.<span class="bu">sum</span>(<span class="st">"offset"</span>)).explain(<span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="cell-14" class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>spark.table(<span class="st">"players"</span>).orderBy(<span class="st">"offset"</span>).select(F.<span class="bu">min</span>(<span class="st">"offset"</span>)).show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-6" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T13:54:56.303000071Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T13:54:55.549179069Z&quot;}" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> silver_players.toPandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-15" class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>spark.table(<span class="st">"games"</span>).select(F.<span class="bu">min</span>(<span class="st">"offset"</span>), F.<span class="bu">sum</span>(<span class="st">"offset"</span>)).collect()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-7" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T13:54:57.533464038Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T13:54:57.528224719Z&quot;}" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">timestamp</th>
-<th data-quarto-table-cell-role="th">id</th>
-<th data-quarto-table-cell-role="th">first_name</th>
-<th data-quarto-table-cell-role="th">last_name</th>
-<th data-quarto-table-cell-role="th">email</th>
-<th data-quarto-table-cell-role="th">account_balance</th>
-<th data-quarto-table-cell-role="th">created_at</th>
-<th data-quarto-table-cell-role="th">updated_at</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>2024-12-12 14:53:46.462</td>
-<td>3</td>
-<td>Ethan</td>
-<td>Clark</td>
-<td>ethan.clark@example.com</td>
-<td>121.30</td>
-<td>2024-12-12 14:44:55.388099</td>
-<td>2024-12-12 14:53:25.028982</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>2024-12-12 14:49:07.905</td>
-<td>1</td>
-<td>Olivia</td>
-<td>Bennett</td>
-<td>olivia.bennett@example.com</td>
-<td>696.35</td>
-<td>2024-12-12 14:44:54.645582</td>
-<td>2024-12-12 14:48:55.174373</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>2024-12-12 14:54:46.583</td>
-<td>3</td>
-<td>Ethan</td>
-<td>Clark</td>
-<td>ethan.clark@example.com</td>
-<td>171.03</td>
-<td>2024-12-12 14:44:55.388099</td>
-<td>2024-12-12 14:53:46.058203</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>2024-12-12 14:50:55.119</td>
-<td>1</td>
-<td>Olivia</td>
-<td>Bennett</td>
-<td>olivia.bennett@example.com</td>
-<td>423.32</td>
-<td>2024-12-12 14:44:54.645582</td>
-<td>2024-12-12 14:50:45.384271</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>2024-12-12 14:51:02.133</td>
-<td>1</td>
-<td>Olivia</td>
-<td>Bennett</td>
-<td>olivia.bennett@example.com</td>
-<td>410.62</td>
-<td>2024-12-12 14:44:54.645582</td>
-<td>2024-12-12 14:50:54.395745</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">105</td>
-<td>2024-12-12 14:51:55.239</td>
-<td>3</td>
-<td>Ethan</td>
-<td>Clark</td>
-<td>ethan.clark@example.com</td>
-<td>109.81</td>
-<td>2024-12-12 14:44:55.388099</td>
-<td>2024-12-12 14:51:11.872173</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">106</td>
-<td>2024-12-12 14:52:17.283</td>
-<td>2</td>
-<td>Lucas</td>
-<td>Hayes</td>
-<td>lucas.hayes@example.com</td>
-<td>617.64</td>
-<td>2024-12-12 14:44:55.167237</td>
-<td>2024-12-12 14:51:58.690301</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">107</td>
-<td>2024-12-12 14:49:22.935</td>
-<td>1</td>
-<td>Olivia</td>
-<td>Bennett</td>
-<td>olivia.bennett@example.com</td>
-<td>609.67</td>
-<td>2024-12-12 14:44:54.645582</td>
-<td>2024-12-12 14:49:19.217219</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">108</td>
-<td>2024-12-12 14:49:22.935</td>
-<td>2</td>
-<td>Lucas</td>
-<td>Hayes</td>
-<td>lucas.hayes@example.com</td>
-<td>1113.90</td>
-<td>2024-12-12 14:44:55.167237</td>
-<td>2024-12-12 14:49:02.473037</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">109</td>
-<td>2024-12-12 14:46:16.560</td>
-<td>1</td>
-<td>Olivia</td>
-<td>Bennett</td>
-<td>olivia.bennett@example.com</td>
-<td>2706.23</td>
-<td>2024-12-12 14:44:54.645582</td>
-<td>2024-12-12 14:46:06.791723</td>
-</tr>
-</tbody>
-</table>
-
-<p>110 rows × 8 columns</p>
+<div id="cell-16" class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    spark.table(<span class="st">"transactions"</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    .select(<span class="st">"offset"</span>, <span class="st">"timestamp"</span>, <span class="st">"value.payload.after.*"</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    .withColumn(<span class="st">"created_at"</span>, bigint_to_timestamp(F.col(<span class="st">"created_at"</span>)))</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    .orderBy(<span class="st">"offset"</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>).toPandas()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="cell-17" class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>spark.sql(<span class="st">"""</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="st">CALL system.rewrite_data_files(</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="st">    table =&gt; 'default.games',</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="st">    options =&gt; map('target-file-size-bytes', '536870912')</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="st">)</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="cell-18" class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>spark.sql(<span class="st">"""</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="st">CALL system.expire_snapshots('default.games')</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-8" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T13:55:29.514111608Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T13:55:29.511527236Z&quot;}" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-19" class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>spark.sql(<span class="st">"""</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="st">CALL system.remove_orphan_files('default.games')</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-9" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T13:55:31.365318933Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T13:55:31.130292750Z&quot;}" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">24</span>, <span class="dv">9</span>))</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>df,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"updated_at"</span>,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">"account_balance"</span>,</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax,</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"id"</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="usun_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
-</figure>
+<div id="cell-20" class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>spark.sql(<span class="st">"""</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="st">CALL spark_catalog.system.rewrite_manifests(</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="st">    table =&gt; 'default.games'</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="st">)</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="cell-21" class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>spark.table(<span class="st">"games"</span>).select(F.<span class="bu">min</span>(<span class="st">"offset"</span>)).collect()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<div id="cell-10" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T18:30:03.190806723Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T18:30:03.188757226Z&quot;}" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-11" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T18:37:51.917055532Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T18:37:51.773970570Z&quot;}" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_parquet(<span class="st">"~/Downloads/12-12-2024-19-36-46_files_list"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-12" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T18:38:13.311196685Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T18:38:13.303661201Z&quot;}" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df.offset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="31">
-<pre><code>0        0
-1        1
-2        2
-3        3
-4        4
-      ... 
-519    106
-520    107
-521    108
-522    109
-523    110
-Name: offset, Length: 524, dtype: int64</code></pre>
-</div>
-</div>
-<div id="cell-13" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-12-12T18:34:09.196629109Z&quot;,&quot;start_time&quot;:&quot;2024-12-12T18:34:09.193874978Z&quot;}" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>x.get(<span class="st">"payload"</span>).get(<span class="st">"after"</span>).get(<span class="st">"updated_at"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="20">
-<pre><code>1734027358609274</code></pre>
-</div>
+<div id="cell-22" class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>spark.table(<span class="st">"players"</span>).select(F.<span class="bu">min</span>(<span class="st">"offset"</span>)).collect()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

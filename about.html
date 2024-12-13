@@ -112,7 +112,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#players" id="toc-players" class="nav-link active" data-scroll-target="#players">Players</a></li>
+  <li><a href="#aktualny-stan-graczy" id="toc-aktualny-stan-graczy" class="nav-link active" data-scroll-target="#aktualny-stan-graczy">Aktualny stan graczy</a></li>
+  <li><a href="#ostatnie-10-gier" id="toc-ostatnie-10-gier" class="nav-link" data-scroll-target="#ostatnie-10-gier">Ostatnie 10 gier</a></li>
+  <li><a href="#największych-wygranych" id="toc-największych-wygranych" class="nav-link" data-scroll-target="#największych-wygranych">5 największych wygranych</a></li>
+  <li><a href="#historia-stanu-konta-gracza" id="toc-historia-stanu-konta-gracza" class="nav-link" data-scroll-target="#historia-stanu-konta-gracza">Historia stanu konta gracza</a></li>
+  <li><a href="#podsumowanie" id="toc-podsumowanie" class="nav-link" data-scroll-target="#podsumowanie">Podsumowanie</a></li>
   </ul>
 </nav>
     </div>
@@ -138,23 +142,23 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Raport jakiś tam</p>
-<div id="cd0cf54b" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-stdout">
-<pre><code>:: loading settings :: url = jar:file:/home/wbonna/repos/github/casino/.venv/lib/python3.11/site-packages/pyspark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
 </div>
 </div>
-<div id="6fd71dd0" class="cell" data-execution_count="3">
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="about_files/figure-html/cell-4-output-1.png" width="628" height="429" class="figure-img"></p>
-</figure>
+<div class="callout-body-container callout-body">
+<p>Stan na 2024-12-13 20:42:59</p>
 </div>
 </div>
-</div>
-<div id="2d733dbf" class="cell" data-execution_count="5">
-<div class="cell-output cell-output-display" data-execution_count="5">
+<section id="aktualny-stan-graczy" class="level3">
+<h3 class="anchored" data-anchor-id="aktualny-stan-graczy">Aktualny stan graczy</h3>
+<div id="2038a256" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="19">
 <table class="dataframe table table-sm table-striped small">
 
 <thead>
@@ -162,15 +166,11 @@ ul.task-list li input[type="checkbox"] {
 <tr>
 
 <th>
-player_id
+id
 </th>
 
 <th>
-first_name
-</th>
-
-<th>
-last_name
+name
 </th>
 
 <th>
@@ -178,23 +178,11 @@ email
 </th>
 
 <th>
-deposit
+account_balance
 </th>
 
 <th>
-games
-</th>
-
-<th>
-stakes
-</th>
-
-<th>
-payouts
-</th>
-
-<th>
-result
+updated_at
 </th>
 
 </tr>
@@ -210,35 +198,19 @@ result
 </td>
 
 <td>
-Ethan
+Olivia Bennett
 </td>
 
 <td>
-Clark
+olivia.bennett@example.com
 </td>
 
 <td>
-ethan.clark@example.com
+0.83
 </td>
 
 <td>
-3000.0
-</td>
-
-<td>
-223
-</td>
-
-<td>
-32011.10
-</td>
-
-<td>
-30190.27
-</td>
-
-<td>
--1820.83
+2024-12-13 20:09:59.361758
 </td>
 
 </tr>
@@ -250,11 +222,7 @@ ethan.clark@example.com
 </td>
 
 <td>
-Lucas
-</td>
-
-<td>
-Hayes
+Lucas Hayes
 </td>
 
 <td>
@@ -262,23 +230,11 @@ lucas.hayes@example.com
 </td>
 
 <td>
-NaN
+76.02
 </td>
 
 <td>
-220
-</td>
-
-<td>
-81328.87
-</td>
-
-<td>
-73473.52
-</td>
-
-<td>
--7855.35
+2024-12-13 20:42:12.641769
 </td>
 
 </tr>
@@ -290,35 +246,19 @@ NaN
 </td>
 
 <td>
-Olivia
+Ethan Clark
 </td>
 
 <td>
-Bennett
+ethan.clark@example.com
 </td>
 
 <td>
-olivia.bennett@example.com
+0.55
 </td>
 
 <td>
-4000.0
-</td>
-
-<td>
-564
-</td>
-
-<td>
-10945.33
-</td>
-
-<td>
-8034.42
-</td>
-
-<td>
--2910.91
+2024-12-13 20:37:02.687253
 </td>
 
 </tr>
@@ -328,24 +268,11 @@ olivia.bennett@example.com
 </table>
 </div>
 </div>
-<section id="players" class="level1">
-<h1>Players</h1>
-<p>Tutaj jakieś info czy coś</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Player 1</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Player 2</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Player 3</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div id="fd4ecad3" class="cell" data-execution_count="6">
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="about_files/figure-html/cell-7-output-1.png" width="628" height="429" class="figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="a0926ac9" class="cell" data-execution_count="7">
-<div class="cell-output cell-output-display" data-execution_count="7">
+</section>
+<section id="ostatnie-10-gier" class="level3">
+<h3 class="anchored" data-anchor-id="ostatnie-10-gier">Ostatnie 10 gier</h3>
+<div id="5fbe3b79" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="20">
 <table class="dataframe table table-sm table-striped small">
 
 <thead>
@@ -353,39 +280,27 @@ olivia.bennett@example.com
 <tr>
 
 <th>
-player_id
+name
 </th>
 
 <th>
-first_name
+type
 </th>
 
 <th>
-last_name
-</th>
-
-<th>
-email
-</th>
-
-<th>
-deposit
-</th>
-
-<th>
-games
-</th>
-
-<th>
-stakes
-</th>
-
-<th>
-payouts
+stake
 </th>
 
 <th>
 result
+</th>
+
+<th>
+payout
+</th>
+
+<th>
+created_at
 </th>
 
 </tr>
@@ -397,39 +312,279 @@ result
 <tr>
 
 <td>
-1
+Lucas Hayes
 </td>
 
 <td>
-Ethan
+straight_roulette
 </td>
 
 <td>
-Clark
+2.23
 </td>
 
 <td>
-ethan.clark@example.com
+loss
 </td>
 
 <td>
-2000.0
+0.00
 </td>
 
 <td>
-166
+2024-12-13 20:37:04.296431
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Lucas Hayes
 </td>
 
 <td>
-20386.23
+straight_roulette
 </td>
 
 <td>
-18366.21
+2.17
 </td>
 
 <td>
--2020.02
+loss
+</td>
+
+<td>
+0.00
+</td>
+
+<td>
+2024-12-13 20:37:25.319895
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Lucas Hayes
+</td>
+
+<td>
+range_roulette
+</td>
+
+<td>
+7.71
+</td>
+
+<td>
+win
+</td>
+
+<td>
+15.42
+</td>
+
+<td>
+2024-12-13 20:37:51.348326
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Lucas Hayes
+</td>
+
+<td>
+straight_roulette
+</td>
+
+<td>
+3.89
+</td>
+
+<td>
+loss
+</td>
+
+<td>
+0.00
+</td>
+
+<td>
+2024-12-13 20:38:25.390036
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Lucas Hayes
+</td>
+
+<td>
+range_roulette
+</td>
+
+<td>
+14.04
+</td>
+
+<td>
+loss
+</td>
+
+<td>
+0.00
+</td>
+
+<td>
+2024-12-13 20:39:14.447705
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Lucas Hayes
+</td>
+
+<td>
+straight_roulette
+</td>
+
+<td>
+1.00
+</td>
+
+<td>
+loss
+</td>
+
+<td>
+0.00
+</td>
+
+<td>
+2024-12-13 20:39:28.464403
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Lucas Hayes
+</td>
+
+<td>
+straight_roulette
+</td>
+
+<td>
+1.77
+</td>
+
+<td>
+loss
+</td>
+
+<td>
+0.00
+</td>
+
+<td>
+2024-12-13 20:40:02.496803
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Lucas Hayes
+</td>
+
+<td>
+straight_roulette
+</td>
+
+<td>
+2.85
+</td>
+
+<td>
+loss
+</td>
+
+<td>
+0.00
+</td>
+
+<td>
+2024-12-13 20:40:56.553439
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Lucas Hayes
+</td>
+
+<td>
+straight_roulette
+</td>
+
+<td>
+1.08
+</td>
+
+<td>
+loss
+</td>
+
+<td>
+0.00
+</td>
+
+<td>
+2024-12-13 20:41:24.589333
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Lucas Hayes
+</td>
+
+<td>
+range_roulette
+</td>
+
+<td>
+22.86
+</td>
+
+<td>
+win
+</td>
+
+<td>
+45.72
+</td>
+
+<td>
+2024-12-13 20:42:12.641769
 </td>
 
 </tr>
@@ -437,127 +592,216 @@ ethan.clark@example.com
 </tbody>
 
 </table>
+</div>
+</div>
+</section>
+<section id="największych-wygranych" class="level3">
+<h3 class="anchored" data-anchor-id="największych-wygranych">5 największych wygranych</h3>
+<div id="352f0269" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="21">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+name
+</th>
+
+<th>
+type
+</th>
+
+<th>
+stake
+</th>
+
+<th>
+payout
+</th>
+
+<th>
+created_at
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+Lucas Hayes
+</td>
+
+<td>
+range_roulette
+</td>
+
+<td>
+179.46
+</td>
+
+<td>
+358.92
+</td>
+
+<td>
+2024-12-13 20:06:47.153912
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Ethan Clark
+</td>
+
+<td>
+range_roulette
+</td>
+
+<td>
+179.26
+</td>
+
+<td>
+358.52
+</td>
+
+<td>
+2024-12-13 19:48:22.088100
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Ethan Clark
+</td>
+
+<td>
+range_roulette
+</td>
+
+<td>
+242.87
+</td>
+
+<td>
+485.75
+</td>
+
+<td>
+2024-12-13 19:51:10.296011
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Ethan Clark
+</td>
+
+<td>
+range_roulette
+</td>
+
+<td>
+250.19
+</td>
+
+<td>
+500.39
+</td>
+
+<td>
+2024-12-13 19:51:43.336232
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Ethan Clark
+</td>
+
+<td>
+range_roulette
+</td>
+
+<td>
+368.62
+</td>
+
+<td>
+737.23
+</td>
+
+<td>
+2024-12-13 19:51:46.348330
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</section>
+<section id="historia-stanu-konta-gracza" class="level2">
+<h2 class="anchored" data-anchor-id="historia-stanu-konta-gracza">Historia stanu konta gracza</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Olivia Bennett</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Lucas Hayes</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Ethan Clark</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div id="94571ea2" class="cell" data-execution_count="10">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="about_files/figure-html/cell-11-output-1.png" width="662" height="470" class="figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div id="edf9a55b" class="cell" data-execution_count="8">
+<div id="e50da946" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="about_files/figure-html/cell-9-output-1.png" width="628" height="429" class="figure-img"></p>
+<p><img src="about_files/figure-html/cell-12-output-1.png" width="662" height="470" class="figure-img"></p>
 </figure>
 </div>
-</div>
-</div>
-<div id="4d1755eb" class="cell" data-execution_count="9">
-<div class="cell-output cell-output-display" data-execution_count="9">
-<table class="dataframe table table-sm table-striped small">
-
-<thead>
-
-<tr>
-
-<th>
-player_id
-</th>
-
-<th>
-first_name
-</th>
-
-<th>
-last_name
-</th>
-
-<th>
-email
-</th>
-
-<th>
-deposit
-</th>
-
-<th>
-games
-</th>
-
-<th>
-stakes
-</th>
-
-<th>
-payouts
-</th>
-
-<th>
-result
-</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<td>
-2
-</td>
-
-<td>
-Lucas
-</td>
-
-<td>
-Hayes
-</td>
-
-<td>
-lucas.hayes@example.com
-</td>
-
-<td>
-NaN
-</td>
-
-<td>
-173
-</td>
-
-<td>
-68893.55
-</td>
-
-<td>
-62884.01
-</td>
-
-<td>
--6009.54
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
 </div>
 </div>
 </div>
 <div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
-<div id="e8535f81" class="cell" data-execution_count="10">
+<div id="ccabb748" class="cell" data-execution_count="12">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="about_files/figure-html/cell-11-output-1.png" width="629" height="429" class="figure-img"></p>
+<p><img src="about_files/figure-html/cell-13-output-1.png" width="662" height="470" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="423b00e8" class="cell" data-execution_count="11">
-<div class="cell-output cell-output-display" data-execution_count="11">
+</div>
+</div>
+</div>
+</section>
+<section id="podsumowanie" class="level2">
+<h2 class="anchored" data-anchor-id="podsumowanie">Podsumowanie</h2>
+<div id="067863c7" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="26">
 <table class="dataframe table table-sm table-striped small">
 
 <thead>
@@ -565,27 +809,11 @@ NaN
 <tr>
 
 <th>
-player_id
-</th>
-
-<th>
-first_name
-</th>
-
-<th>
-last_name
-</th>
-
-<th>
-email
+name
 </th>
 
 <th>
 deposit
-</th>
-
-<th>
-games
 </th>
 
 <th>
@@ -597,7 +825,11 @@ payouts
 </th>
 
 <th>
-result
+games_win
+</th>
+
+<th>
+games_loss
 </th>
 
 </tr>
@@ -609,39 +841,83 @@ result
 <tr>
 
 <td>
-3
+Olivia Bennett
 </td>
 
 <td>
-Olivia
+1000.0
 </td>
 
 <td>
-Bennett
+1604.22
 </td>
 
 <td>
-olivia.bennett@example.com
+605.02
 </td>
 
 <td>
-3000.0
+5
 </td>
 
 <td>
-476
+180
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Lucas Hayes
 </td>
 
 <td>
-9582.17
+1000.0
 </td>
 
 <td>
-5096.53
+2890.37
 </td>
 
 <td>
--4485.64
+1966.44
+</td>
+
+<td>
+18
+</td>
+
+<td>
+69
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+Ethan Clark
+</td>
+
+<td>
+1000.0
+</td>
+
+<td>
+6643.25
+</td>
+
+<td>
+5643.76
+</td>
+
+<td>
+53
+</td>
+
+<td>
+54
 </td>
 
 </tr>
@@ -649,9 +925,6 @@ olivia.bennett@example.com
 </tbody>
 
 </table>
-</div>
-</div>
-</div>
 </div>
 </div>
 
@@ -749,7 +1022,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/wbonna352\.github\.io\/casino\/");
+      var filterRegex = new RegExp('/' + window.location.host + '/');
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
